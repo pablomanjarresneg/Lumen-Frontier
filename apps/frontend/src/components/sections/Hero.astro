@@ -1,0 +1,73 @@
+---
+interface Props {
+  title?: string
+  subtitle?: string
+  description?: string
+  badge?: string
+  primaryCTA?: {
+    text: string
+    href: string
+  }
+}
+
+const {
+  title = 'Learn 10x Faster with',
+  subtitle = 'AI-Powered Learning',
+  description = "Upload notes, PDFs, videos, or websites. Combine multiple sources into powerful study sets and let our AI create personalized learning tools for you.",
+  badge = '🤖 AI-Powered Learning Lab',
+  primaryCTA = {
+    text: 'Get Started for Free',
+    href: '#explore'
+  }
+} = Astro.props
+---
+
+<section class="hero-section">
+  <!-- Simple gradient background -->
+  <div class="hero-background">
+    <div class="hero-gradient-orb hero-gradient-orb-1"></div>
+    <div class="hero-gradient-orb hero-gradient-orb-2"></div>
+  </div>
+
+  <div class="hero-content">
+    {badge && (
+      <div class="hero-badge">
+        <span class="hero-badge-text">{badge}</span>
+      </div>
+    )}
+
+    <h1 class="hero-title">
+      {title}<br/>
+      <span class="hero-title-gradient">{subtitle}</span>
+    </h1>
+
+    <p class="hero-description">
+      {description}
+    </p>
+
+    <div class="hero-cta-group">
+      <a href={primaryCTA.href} class="hero-btn hero-btn-primary">
+        {primaryCTA.text}
+        <svg class="hero-btn-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Social Proof -->
+    <div class="hero-social-proof">
+      <div class="hero-avatars">
+        <div class="hero-avatar hero-avatar-1"></div>
+        <div class="hero-avatar hero-avatar-2"></div>
+        <div class="hero-avatar hero-avatar-3"></div>
+        <div class="hero-avatar hero-avatar-4"></div>
+        <div class="hero-avatar hero-avatar-5"></div>
+      </div>
+      <p class="hero-social-text">Loved by 20,000+ students worldwide</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  @import './Hero.css';
+</style>

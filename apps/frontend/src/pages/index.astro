@@ -1,20 +1,33 @@
 ---
 import Layout from '@/layouts/Layout.astro'
+
+// Interactive React components (require JavaScript)
+import Navbar from '@/components/layout/Navbar'
+import PlanetaryScene from '@/components/sections/PlanetaryScene'
+
+// Static Astro components (zero JavaScript shipped)
+import Hero from '@/components/sections/Hero.astro'
+import FeatureShowcase from '@/components/sections/FeatureShowcase.astro'
+import FeaturesGrid from '@/components/sections/FeaturesGrid.astro'
+import HowItWorks from '@/components/sections/HowItWorks.astro'
+import Footer from '@/components/layout/Footer.astro'
+
+import '@/styles/animations.css'
 ---
 
-<Layout title="Home - Lumen Frontier">
-  <main class="min-h-screen flex items-center justify-center p-8">
-    <div class="max-w-2xl mx-auto text-center space-y-8">
-      <h1 class="text-5xl font-bold text-primary-700">
-        Welcome to Lumen Frontier
-      </h1>
+<Layout title="Lumen Frontier - Push the Edge of What You Know">
+  <!-- Interactive navbar: Load JS when browser is idle for better performance -->
+  <Navbar client:idle />
 
-      <p class="text-xl text-slate-600">
-        A modular system where knowledge becomes a world you can explore, test, and expand.
-      </p>
+  <!-- Static sections: Zero JavaScript, rendered at build time -->
+  <Hero />
+  <FeatureShowcase />
+  <FeaturesGrid />
+  <HowItWorks />
 
-      <div class="mt-12">
-      </div>
-    </div>
-  </main>
+  <!-- Interactive 3D scene: Load JS only when visible in viewport -->
+  <PlanetaryScene client:visible />
+
+  <!-- Static footer: Zero JavaScript -->
+  <Footer />
 </Layout>
