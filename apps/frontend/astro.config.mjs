@@ -21,4 +21,19 @@ export default defineConfig({
     port: 3000,
     host: true,
   },
+  vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'three': ['three'],
+            'react-vendor': ['react', 'react-dom'],
+          }
+        }
+      }
+    },
+    ssr: {
+      noExternal: ['three']
+    }
+  }
 })
