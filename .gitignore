@@ -70,3 +70,5 @@ Thumbs.db
 start.py
 setup.bat
 start.bat
+
+.vercel/
