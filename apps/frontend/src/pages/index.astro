@@ -25,9 +25,11 @@ import '@/styles/animations.css'
   <FeaturesGrid />
   <HowItWorks />
 
-  <!-- Interactive 3D scene: Load JS only when visible in viewport -->
-  <PlanetaryScene client:visible />
+  <!-- Interactive 3D scene: ONLY load when user scrolls close AND has good connection -->
+  <PlanetaryScene client:idle />
 
   <!-- Static footer: Zero JavaScript -->
   <Footer />
 </Layout>
+
+

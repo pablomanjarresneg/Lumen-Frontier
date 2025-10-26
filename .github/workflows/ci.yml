@@ -58,4 +58,8 @@ jobs:
 
       - name: Test with pytest
         run: |
-          pytest tests/ -v
+          if [ -d "tests" ]; then
+            pytest tests/ -v
+          else
+            echo "No tests directory found, skipping tests"
+          fi

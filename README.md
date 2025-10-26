@@ -8,13 +8,13 @@ Lumen Frontier is built for those who want more than lessons. It's a modular sys
          alt="This project is part of Moonshot, a 4-day hackathon in Florida visiting Kennedy Space Center and Universal Studios!"
          style="width: 100%;">
   </a>
-</div>
+</div> 
 
 ## Tech Stack
 
 - **Frontend**: Astro + React + Tailwind CSS
 - **Backend**: Python + FastAPI + Uvicorn
-- **Database**: PostgreSQL (Supabase)
+- **Database**: PostgreSQL (Supabase) 
 - **Deployment**: Vercel (serverless)
 - **Architecture**: Monorepo with npm workspaces
 
