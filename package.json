@@ -14,7 +14,6 @@
     "build:frontend": "npm run build --workspace apps/frontend",
     "build:vercel": "cd apps/frontend && npm install && npm run build",
     "test": "npm run test --workspaces",
-    "lint": "npm run lint --workspaces",
     "clean": "npm run clean --workspaces && rm -rf node_modules",
     "vercel:env": "vercel env pull",
     "deploy": "vercel --prod",
