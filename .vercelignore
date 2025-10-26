@@ -33,5 +33,7 @@ Thumbs.db
 .git
 .gitignore
 
-# Documentation (optional - include if you want docs deployed)
-# docs
+# Backend (not deployed to Vercel)
+apps/backend
+api
+
