@@ -211,6 +211,5 @@ class WidgetStore {
     }
   }
 }
-
 // Export singleton instance
 export const widgetStore = new WidgetStore()
