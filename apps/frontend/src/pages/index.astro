@@ -1,35 +1,595 @@
 ---
-import Layout from '@/layouts/Layout.astro'
-
-// Interactive React components (require JavaScript)
-import Navbar from '@/components/layout/Navbar'
-import PlanetaryScene from '@/components/sections/PlanetaryScene'
-
-// Static Astro components (zero JavaScript shipped)
-import Hero from '@/components/sections/Hero.astro'
-import FeatureShowcase from '@/components/sections/FeatureShowcase.astro'
-import FeaturesGrid from '@/components/sections/FeaturesGrid.astro'
-import HowItWorks from '@/components/sections/HowItWorks.astro'
-import Footer from '@/components/layout/Footer.astro'
-
+/**
+ * Landing Page - Choose Your Experience
+ * Simple selection between LumenOS (Dashboard) and Lumenverse (Space Navigation)
+ */
 import '@/styles/animations.css'
 ---
 
-<Layout title="Lumen Frontier - Push the Edge of What You Know">
-  <!-- Interactive navbar: Load JS when browser is idle for better performance -->
-  <Navbar client:idle />
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lumen Frontier - Choose Your Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="landing-wrapper">
+      <!-- Starfield Background -->
+      <div class="starfield">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+        <div class="stars3"></div>
+      </div>
 
-  <!-- Static sections: Zero JavaScript, rendered at build time -->
-  <Hero />
-  <FeatureShowcase />
-  <FeaturesGrid />
-  <HowItWorks />
+      <!-- Animated gradient overlay -->
+      <div class="gradient-overlay"></div>
 
-  <!-- Interactive 3D scene: ONLY load when user scrolls close AND has good connection -->
-  <PlanetaryScene client:idle />
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Brand Header -->
+        <header class="brand-header">
+          <div class="logo-badge">
+            <svg class="logo-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h1 class="brand-title">Lumen Frontier</h1>
+          <p class="brand-tagline">Push the Edge of What You Know</p>
+          <div class="tagline-underline"></div>
+        </header>
 
-  <!-- Static footer: Zero JavaScript -->
-  <Footer />
-</Layout>
+        <!-- Experience Cards -->
+        <div class="experience-grid">
+          <!-- LumenOS Card -->
+          <a href="/dashboard" class="experience-card lumenos">
+            <div class="card-glow lumenos-glow"></div>
+            <div class="card-content">
+              <div class="card-header">
+                <div class="card-icon-wrapper">
+                  <div class="icon-bg"></div>
+                  <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+                  </svg>
+                </div>
+                <div class="card-title-group">
+                  <h2 class="card-title">LumenOS</h2>
+                  <p class="card-subtitle">Dashboard Experience</p>
+                </div>
+              </div>
+              
+              <p class="card-description">
+                Your personalized learning command center. Organize notes, track progress, and visualize your knowledge journey with powerful widgets.
+              </p>
+              
+              <div class="card-features">
+                <span class="feature-pill">📊 Analytics</span>
+                <span class="feature-pill">📝 Smart Notes</span>
+                <span class="feature-pill">📈 Progress Tracking</span>
+              </div>
+              
+              <div class="card-footer">
+                <span class="enter-text">Enter LumenOS</span>
+                <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </div>
+            </div>
+          </a>
+
+          <!-- Lumenverse Card -->
+          <a href="/lumenverse" class="experience-card lumenverse">
+            <div class="card-glow lumenverse-glow"></div>
+            <div class="card-content">
+              <div class="card-header">
+                <div class="card-icon-wrapper">
+                  <div class="icon-bg"></div>
+                  <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div class="card-title-group">
+                  <h2 class="card-title">Lumenverse</h2>
+                  <p class="card-subtitle">3D Space Explorer</p>
+                </div>
+              </div>
+              
+              <p class="card-description">
+                Navigate through knowledge as an astronaut in space. Explore topics as planets, discover connections, and experience learning in 3D.
+              </p>
+              
+              <div class="card-features">
+                <span class="feature-pill">🌌 Immersive 3D</span>
+                <span class="feature-pill">🪐 Planet Topics</span>
+                <span class="feature-pill">🚀 Free Navigation</span>
+              </div>
+              
+              <div class="card-footer">
+                <span class="enter-text">Launch Lumenverse</span>
+                <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Bottom Info -->
+        <footer class="page-footer">
+          <p class="footer-text">Choose your path to mastery</p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  .landing-wrapper {
+    position: relative;
+    min-height: 100vh;
+    background: #0a0d1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  /* Starfield Background */
+  .starfield {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .stars, .stars2, .stars3 {
+    position: absolute;
+    inset: 0;
+    background: transparent;
+  }
+
+  .stars {
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, white, transparent),
+      radial-gradient(2px 2px at 60px 70px, white, transparent),
+      radial-gradient(1px 1px at 50px 50px, white, transparent),
+      radial-gradient(1px 1px at 130px 80px, white, transparent),
+      radial-gradient(2px 2px at 90px 10px, white, transparent);
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    animation: twinkle 5s infinite;
+    opacity: 0.5;
+  }
+
+  .stars2 {
+    background-image: 
+      radial-gradient(1px 1px at 40px 60px, #8b5cf6, transparent),
+      radial-gradient(1px 1px at 110px 20px, #3b82f6, transparent),
+      radial-gradient(1px 1px at 160px 120px, #ec4899, transparent);
+    background-repeat: repeat;
+    background-size: 180px 180px;
+    animation: twinkle 6s infinite 1s;
+    opacity: 0.4;
+  }
+
+  .stars3 {
+    background-image: 
+      radial-gradient(1px 1px at 80px 90px, #06b6d4, transparent),
+      radial-gradient(1px 1px at 140px 50px, #8b5cf6, transparent);
+    background-repeat: repeat;
+    background-size: 220px 220px;
+    animation: twinkle 7s infinite 2s;
+    opacity: 0.3;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+  }
+
+  /* Gradient Overlay */
+  .gradient-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* Main Content */
+  .main-content {
+    position: relative;
+    z-index: 10;
+    max-width: 1400px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+  }
+
+  /* Brand Header */
+  .brand-header {
+    text-align: center;
+    animation: fadeInDown 1s ease-out;
+  }
+
+  .logo-badge {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .logo-badge::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 28px;
+    padding: 2px;
+    background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+    animation: rotate 8s linear infinite;
+  }
+
+  .logo-svg {
+    width: 48px;
+    height: 48px;
+    color: white;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes rotate {
+    100% { transform: rotate(360deg); }
+  }
+
+  .brand-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .brand-tagline {
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+
+  .tagline-underline {
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #667eea, transparent);
+    margin: 0 auto;
+  }
+
+  /* Experience Grid */
+  .experience-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+    gap: 2rem;
+    width: 100%;
+    max-width: 1000px;
+  }
+
+  .experience-card {
+    position: relative;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 0;
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fadeInUp 1s ease-out;
+  }
+
+  .experience-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.5), rgba(236, 72, 153, 0.5));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .experience-card:hover::before {
+    opacity: 1;
+  }
+
+  .experience-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .lumenverse {
+    animation-delay: 0.2s;
+  }
+
+  .card-glow {
+    position: absolute;
+    inset: -100px;
+    background: radial-gradient(circle at center, transparent 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.6s;
+    pointer-events: none;
+  }
+
+  .lumenos-glow {
+    background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.2) 0%, transparent 70%);
+  }
+
+  .lumenverse-glow {
+    background: radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.2) 0%, transparent 70%);
+  }
+
+  .experience-card:hover .card-glow {
+    opacity: 1;
+  }
+
+  .card-content {
+    position: relative;
+    z-index: 1;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    height: 100%;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .card-icon-wrapper {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .icon-bg {
+    position: absolute;
+    inset: -8px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 16px;
+    opacity: 0.2;
+    filter: blur(20px);
+  }
+
+  .lumenverse .icon-bg {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+  }
+
+  .card-icon {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+    padding: 10px;
+    border-radius: 12px;
+    transition: all 0.3s;
+  }
+
+  .lumenverse .card-icon {
+    color: #ec4899;
+    background: rgba(236, 72, 153, 0.1);
+  }
+
+  .experience-card:hover .card-icon {
+    transform: scale(1.1) rotate(-5deg);
+  }
+
+  .card-title-group {
+    flex: 1;
+  }
+
+  .card-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.25rem;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.01em;
+  }
+
+  .card-subtitle {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .card-description {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.7;
+    font-size: 0.9375rem;
+  }
+
+  .card-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+  }
+
+  .feature-pill {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s;
+  }
+
+  .experience-card:hover .feature-pill {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .enter-text {
+    font-weight: 600;
+    color: white;
+    font-size: 1.0625rem;
+  }
+
+  .arrow-icon {
+    width: 24px;
+    height: 24px;
+    color: #667eea;
+    transition: all 0.3s;
+  }
+
+  .lumenverse .arrow-icon {
+    color: #ec4899;
+  }
+
+  .experience-card:hover .arrow-icon {
+    transform: translateX(8px);
+  }
+
+  /* Footer */
+  .page-footer {
+    animation: fadeIn 1.2s ease-out 0.6s both;
+  }
+
+  .footer-text {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  /* Animations */
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .landing-wrapper {
+      padding: 1.5rem;
+    }
+
+    .main-content {
+      gap: 3rem;
+    }
+
+    .logo-badge {
+      width: 80px;
+      height: 80px;
+    }
+
+    .logo-svg {
+      width: 40px;
+      height: 40px;
+    }
+
+    .experience-grid {
+      gap: 1.5rem;
+    }
+
+    .card-content {
+      padding: 2rem;
+      gap: 1.25rem;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+    }
+
+    .card-header {
+      gap: 1rem;
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      padding: 8px;
+    }
+  }
+</style>
 
 
