@@ -1,19 +1,12 @@
-/**
- * Analytics Widget
- *
- * Learning metrics and performance tracking
- */
-
 import type { WidgetProps } from '@/types/widgets'
 
 export default function AnalyticsWidget({ config }: WidgetProps) {
-  // Sample analytics data
   const stats = {
-    totalStudyTime: 127, // hours
+    totalStudyTime: 127,
     cardsReviewed: 1243,
     accuracy: 87,
     streak: 12,
-    weeklyActivity: [65, 78, 82, 91, 75, 88, 95] // percentage for each day
+    weeklyActivity: [65, 78, 82, 91, 75, 88, 95]
   }
 
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -21,7 +14,6 @@ export default function AnalyticsWidget({ config }: WidgetProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Key Metrics */}
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-3 border border-blue-100">
           <div className="flex items-center gap-2 mb-1">
@@ -64,7 +56,6 @@ export default function AnalyticsWidget({ config }: WidgetProps) {
         </div>
       </div>
 
-      {/* Weekly Activity Chart */}
       <div className="flex-1 bg-slate-50 rounded-lg p-3 border border-slate-200">
         <h4 className="text-sm font-semibold text-slate-700 mb-3">Weekly Activity</h4>
         <div className="flex items-end justify-between gap-2 h-32">
@@ -86,7 +77,6 @@ export default function AnalyticsWidget({ config }: WidgetProps) {
         </div>
       </div>
 
-      {/* Quick Insights */}
       <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
         <p className="text-xs font-medium text-blue-900 mb-1">💡 Insight</p>
         <p className="text-xs text-slate-700">

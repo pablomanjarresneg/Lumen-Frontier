@@ -1,9 +1,24 @@
-/**
- * Widget Header Component
- * Handles the drag functionality and control buttons
- */
+import type { WidgetConfig } from '@/types/widgets'
 
-import type { WidgetHeaderProps } from './types/'
+interface Widget extends WidgetConfig {
+  x: number
+  y: number
+  width: number
+  height: number
+  color?: string
+  icon?: string
+  minimized?: boolean
+  content?: any
+}
+
+interface WidgetHeaderProps {
+  widget: Widget
+  isEditMode: boolean
+  isDragging: boolean
+  onDragStart: (e: React.MouseEvent) => void
+  onRemove: () => void
+  onMinimize: () => void
+}
 
 export default function WidgetHeader({
   widget,
@@ -32,7 +47,6 @@ export default function WidgetHeader({
         <h3 className="text-white font-semibold text-sm">{widget.title}</h3>
       </div>
 
-      {/* Controls */}
       <div className="widget-controls flex items-center gap-1">
         {/* Minimize Button */}
         <button
@@ -49,7 +63,6 @@ export default function WidgetHeader({
           </svg>
         </button>
 
-        {/* Remove Button (only in edit mode) */}
         {isEditMode && (
           <button
             onClick={onRemove}

@@ -1,19 +1,11 @@
-/**
- * Widget Renderer
- *
- * Maps widget types to their components and renders them
- */
-
 import type { WidgetType, WidgetProps } from '@/types/widgets'
 
-// Import all widget components
-import NotesWidget from './widgets/NotesWidget'
-import FlashcardsWidget from './widgets/FlashcardsWidget'
-import AnalyticsWidget from './widgets/AnalyticsWidget'
-import QuickAccessWidget from './widgets/QuickAccessWidget'
-import ProgressWidget from './widgets/ProgressWidget'
+import NotesWidget from '../widgets/notes/NotesWidget'
+import FlashcardsWidget from '../widgets/flashcards/FlashcardsWidget'
+import AnalyticsWidget from '../widgets/analytics/AnalyticsWidget'
+import QuickAccessWidget from '../widgets/quick-access/QuickAccessWidget'
+import ProgressWidget from '../widgets/progress/ProgressWidget'
 
-// Widget component registry
 const WIDGET_COMPONENTS: Record<WidgetType, React.ComponentType<WidgetProps>> = {
   'notes': NotesWidget,
   'flashcards': FlashcardsWidget,

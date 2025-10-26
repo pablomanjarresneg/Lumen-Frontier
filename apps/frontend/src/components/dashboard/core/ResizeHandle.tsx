@@ -1,12 +1,7 @@
-/**
- * Resize Handle Component
- */
-
-import type { ResizeHandleProps } from './types/'
-
-// Extended props to include isMinimized
-interface Props extends ResizeHandleProps {
+interface Props {
+  isEditMode: boolean
   isMinimized: boolean
+  onResizeStart: (e: React.MouseEvent) => void
 }
 
 export default function ResizeHandle({ isEditMode, isMinimized, onResizeStart }: Props) {

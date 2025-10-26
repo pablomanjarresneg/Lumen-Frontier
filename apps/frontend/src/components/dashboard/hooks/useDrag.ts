@@ -1,22 +1,21 @@
-/**
- * Custom hook for widget drag functionality
- */
-
 import { useState, useRef, useEffect } from 'react'
-import type { DragState, WidgetPosition } from '../types/'
+
+interface WidgetPosition {
+  x: number
+  y: number
+}
 
 export function useDrag(
   currentPosition: WidgetPosition,
   onUpdate: (updates: Partial<WidgetPosition>) => void,
   isEnabled: boolean
-): DragState {
+) {
   const [isDragging, setIsDragging] = useState(false)
   const dragStartPos = useRef({ x: 0, y: 0, widgetX: 0, widgetY: 0 })
 
   const handleDragStart = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isEnabled) return
 
-    // Only allow dragging from the header
     const target = e.target as HTMLElement
     if (target.closest('.widget-controls')) return
 
@@ -54,7 +53,6 @@ export function useDrag(
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mouseup', handleMouseUp)
 
-    // Prevent text selection while dragging
     document.body.style.userSelect = 'none'
     document.body.style.cursor = 'grabbing'
 

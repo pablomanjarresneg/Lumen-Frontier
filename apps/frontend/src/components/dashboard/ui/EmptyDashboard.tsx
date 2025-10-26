@@ -1,8 +1,6 @@
-/**
- * Empty Dashboard State Component
- */
-
-import type { EmptyDashboardProps } from '../types/'
+interface EmptyDashboardProps {
+  onAddWidget: () => void
+}
 
 export default function EmptyDashboard({ onAddWidget }: EmptyDashboardProps) {
   return (

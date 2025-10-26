@@ -1,15 +1,15 @@
-/**
- * Custom hook for widget resize functionality
- */
-
 import { useState, useRef, useEffect } from 'react'
-import type { ResizeState, WidgetSize } from '../types/'
+
+interface WidgetSize {
+  width: number
+  height: number
+}
 
 export function useResize(
   currentSize: WidgetSize,
   onUpdate: (updates: Partial<WidgetSize>) => void,
   isEnabled: boolean
-): ResizeState {
+) {
   const [isResizing, setIsResizing] = useState(false)
   const resizeStartPos = useRef({ x: 0, y: 0, width: 0, height: 0 })
 
@@ -48,7 +48,6 @@ export function useResize(
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mouseup', handleMouseUp)
 
-    // Prevent text selection while resizing
     document.body.style.userSelect = 'none'
     document.body.style.cursor = 'nwse-resize'
 

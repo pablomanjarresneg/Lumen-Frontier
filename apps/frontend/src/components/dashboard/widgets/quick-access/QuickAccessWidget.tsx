@@ -1,9 +1,3 @@
-/**
- * Quick Access Widget
- *
- * Quick links to frequently used features
- */
-
 import type { WidgetProps } from '@/types/widgets'
 
 export default function QuickAccessWidget({ config }: WidgetProps) {

@@ -1,9 +1,3 @@
-/**
- * Widget Registry
- *
- * Central registry of all available widgets with metadata
- */
-
 import type { WidgetMetadata, WidgetType } from '@/types/widgets'
 
 export const WIDGET_REGISTRY: Record<WidgetType, WidgetMetadata> = {

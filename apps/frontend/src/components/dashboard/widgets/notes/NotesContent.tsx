@@ -1,7 +1,3 @@
-/**
- * Notes Widget Content
- */
-
 export default function NotesContent() {
   return (
     <div className="space-y-3">

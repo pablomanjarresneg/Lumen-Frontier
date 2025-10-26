@@ -1,19 +1,24 @@
-/**
- * Dashboard - LumenOS Core
- * Refactored with composition pattern using smaller UI components
- */
-
 import { useState, useEffect } from 'react'
-import WidgetContainer from './WidgetContainer'
+import WidgetContainer from './core/WidgetContainer'
 import { DashboardTopBar, EditModeIndicator, EmptyDashboard, AnimatedBackground } from './ui'
 import { DEFAULT_WIDGETS } from './constants'
-import type { Widget } from './types/'
+import type { WidgetConfig } from '@/types/widgets'
+
+interface Widget extends WidgetConfig {
+  x: number
+  y: number
+  width: number
+  height: number
+  color?: string
+  icon?: string
+  minimized?: boolean
+  content?: any
+}
 
 export default function Dashboard() {
   const [widgets, setWidgets] = useState<Widget[]>([])
   const [isEditMode, setIsEditMode] = useState(false)
 
-  // Load widgets on mount
   useEffect(() => {
     const stored = localStorage.getItem('dashboard_widgets')
     if (stored) {
@@ -27,7 +32,6 @@ export default function Dashboard() {
     }
   }, [])
 
-  // Save widgets when they change
   useEffect(() => {
     if (widgets.length > 0) {
       localStorage.setItem('dashboard_widgets', JSON.stringify(widgets))
@@ -83,7 +87,6 @@ export default function Dashboard() {
         onReset={resetDashboard}
       />
 
-      {/* Dashboard Canvas */}
       <div className="pt-20 pb-8 px-4 relative min-h-screen">
         {widgets.length === 0 ? (
           <EmptyDashboard onAddWidget={addNewWidget} />

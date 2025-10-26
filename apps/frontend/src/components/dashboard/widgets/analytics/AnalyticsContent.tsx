@@ -1,7 +1,3 @@
-/**
- * Analytics Widget Content
- */
-
 export default function AnalyticsContent() {
   return (
     <div className="space-y-4">

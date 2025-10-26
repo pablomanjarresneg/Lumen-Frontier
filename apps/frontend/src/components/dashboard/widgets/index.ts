@@ -1,8 +1,10 @@
-/**
- * Widget Content Components - Barrel Export
- */
-
-export { default as NotesContent } from './NotesContent'
-export { default as ProgressContent } from './ProgressContent'
-export { default as AnalyticsContent } from './AnalyticsContent'
+export { default as AnalyticsWidget } from './analytics/AnalyticsWidget'
+export { default as AnalyticsContent } from './analytics/AnalyticsContent'
+export { default as FlashcardsWidget } from './flashcards/FlashcardsWidget'
+export { default as NotesWidget } from './notes/NotesWidget'
+export { default as NotesContent } from './notes/NotesContent'
+export { default as ProgressWidget } from './progress/ProgressWidget'
+export { default as ProgressContent } from './progress/ProgressContent'
+export { default as QuickAccessWidget } from './quick-access/QuickAccessWidget'
 export { default as DefaultContent } from './DefaultContent'
+

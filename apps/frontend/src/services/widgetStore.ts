@@ -1,9 +1,3 @@
-/**
- * Widget Store - Data Layer
- *
- * Manages widget state, persistence, and CRUD operations
- */
-
 import type { WidgetConfig, WidgetType, DashboardLayout } from '@/types/widgets'
 
 const STORAGE_KEY = 'lumen_dashboard_layout'
@@ -12,11 +6,7 @@ class WidgetStore {
   private listeners: Set<() => void> = new Set()
   private cachedLayout: DashboardLayout | null = null
 
-  /**
-   * Get current dashboard layout from localStorage (with caching)
-   */
   getLayout(): DashboardLayout {
-    // Return cached layout if available
     if (this.cachedLayout) {
       return this.cachedLayout
     }
@@ -40,15 +30,12 @@ class WidgetStore {
     return defaultLayout
   }
 
-  /**
-   * Save dashboard layout to localStorage
-   */
   saveLayout(layout: DashboardLayout): void {
     if (typeof window === 'undefined') return
 
     try {
       layout.lastModified = Date.now()
-      this.cachedLayout = layout // Update cache
+      this.cachedLayout = layout
       localStorage.setItem(STORAGE_KEY, JSON.stringify(layout))
       this.notifyListeners()
     } catch (error) {
@@ -56,16 +43,10 @@ class WidgetStore {
     }
   }
 
-  /**
-   * Get all widgets
-   */
   getWidgets(): WidgetConfig[] {
     return this.getLayout().widgets
   }
 
-  /**
-   * Add a new widget
-   */
   addWidget(type: WidgetType, title: string, position?: Partial<WidgetConfig['position']>): WidgetConfig {
     const layout = this.getLayout()
 
@@ -92,9 +73,6 @@ class WidgetStore {
     return newWidget
   }
 
-  /**
-   * Update a widget
-   */
   updateWidget(id: string, updates: Partial<WidgetConfig>): void {
     const layout = this.getLayout()
     const widgetIndex = layout.widgets.findIndex(w => w.id === id)
@@ -113,18 +91,12 @@ class WidgetStore {
     this.saveLayout(layout)
   }
 
-  /**
-   * Remove a widget
-   */
   removeWidget(id: string): void {
     const layout = this.getLayout()
     layout.widgets = layout.widgets.filter(w => w.id !== id)
     this.saveLayout(layout)
   }
 
-  /**
-   * Update widget position
-   */
   updateWidgetPosition(id: string, position: Partial<WidgetConfig['position']>): void {
     const layout = this.getLayout()
     const widget = layout.widgets.find(w => w.id === id)
@@ -140,48 +112,30 @@ class WidgetStore {
     this.saveLayout(layout)
   }
 
-  /**
-   * Clear all widgets
-   */
   clearWidgets(): void {
     const layout = this.getLayout()
     layout.widgets = []
     this.saveLayout(layout)
   }
 
-  /**
-   * Reset to default layout
-   */
   resetToDefault(): void {
-    this.cachedLayout = null // Clear cache
+    this.cachedLayout = null
     this.saveLayout(this.getDefaultLayout())
   }
 
-  /**
-   * Subscribe to layout changes
-   */
   subscribe(callback: () => void): () => void {
     this.listeners.add(callback)
     return () => this.listeners.delete(callback)
   }
 
-  /**
-   * Notify all subscribers of changes
-   */
   private notifyListeners(): void {
     this.listeners.forEach(callback => callback())
   }
 
-  /**
-   * Generate unique widget ID
-   */
   private generateId(): string {
     return `widget_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
   }
 
-  /**
-   * Get default dashboard layout
-   */
   private getDefaultLayout(): DashboardLayout {
     return {
       widgets: [
@@ -211,5 +165,5 @@ class WidgetStore {
     }
   }
 }
-// Export singleton instance
+
 export const widgetStore = new WidgetStore()

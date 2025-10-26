@@ -1,8 +1,6 @@
-/**
- * Edit Mode Indicator Component
- */
-
-import type { EditModeIndicatorProps } from '../types/'
+interface EditModeIndicatorProps {
+  isEditMode: boolean
+}
 
 export default function EditModeIndicator({ isEditMode }: EditModeIndicatorProps) {
   if (!isEditMode) return null

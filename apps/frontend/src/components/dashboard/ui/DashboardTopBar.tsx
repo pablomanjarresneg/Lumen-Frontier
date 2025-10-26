@@ -1,11 +1,7 @@
-/**
- * Dashboard Top Bar Component
- */
-
-import type { DashboardTopBarProps } from '../types/'
-
-// Extended props to include onReset
-interface Props extends DashboardTopBarProps {
+interface DashboardTopBarProps {
+  isEditMode: boolean
+  onAddWidget: () => void
+  onToggleEditMode: () => void
   onReset: () => void
 }
 
@@ -14,7 +10,7 @@ export default function DashboardTopBar({
   onAddWidget,
   onToggleEditMode,
   onReset
-}: Props) {
+}: DashboardTopBarProps) {
   return (
     <div className="fixed top-0 left-0 right-0 h-16 glass-topbar backdrop-blur-2xl z-50 border-b border-white/20">
       <div className="h-full px-6 flex items-center justify-between">

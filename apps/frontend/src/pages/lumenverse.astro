@@ -1,0 +1,135 @@
+---
+/**
+ * Lumenverse - 3D Space Navigation
+ * Explore knowledge through an immersive planetary universe
+ */
+import PlanetaryScene from '@/components/features/planetary-scene/PlanetaryScene'
+import '@/styles/global.css'
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lumenverse - Explore Knowledge in 3D Space</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- Back to home button -->
+    <a href="/" class="back-button">
+      <svg class="back-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      <span class="back-text">Back to Home</span>
+    </a>
+
+    <!-- Planetary Scene Container -->
+    <div id="scene-wrapper">
+      <PlanetaryScene client:load />
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0a0e1a;
+  }
+
+  /* Scene Wrapper */
+  #scene-wrapper {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Ensure PlanetaryScene section fills container */
+  #scene-wrapper > section {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Back Button */
+  .back-button {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .back-button:hover {
+    background: rgba(15, 23, 42, 0.95);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(-4px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .back-icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .back-button:hover .back-icon {
+    transform: translateX(-4px);
+  }
+
+  .back-text {
+    letter-spacing: 0.02em;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 640px) {
+    .back-button {
+      top: 1rem;
+      left: 1rem;
+      padding: 0.625rem 1rem;
+      font-size: 0.8125rem;
+    }
+
+    .back-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    .back-text {
+      display: none;
+    }
+
+    .back-button::after {
+      content: 'Home';
+      font-size: 0.8125rem;
+    }
+  }
+</style>

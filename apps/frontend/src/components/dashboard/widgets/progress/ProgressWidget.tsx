@@ -1,9 +1,3 @@
-/**
- * Progress Widget
- *
- * Overall learning progress and achievements
- */
-
 import type { WidgetProps } from '@/types/widgets'
 
 export default function ProgressWidget({ config }: WidgetProps) {
@@ -12,7 +6,6 @@ export default function ProgressWidget({ config }: WidgetProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Circular Progress */}
       <div className="flex items-center justify-center mb-4">
         <div className="relative w-32 h-32">
           {/* Background circle */}
@@ -51,7 +44,6 @@ export default function ProgressWidget({ config }: WidgetProps) {
         </div>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 gap-2 mb-3">
         <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-lg p-3 border border-pink-100">
           <div className="flex items-center gap-2 mb-1">
@@ -74,7 +66,6 @@ export default function ProgressWidget({ config }: WidgetProps) {
         </div>
       </div>
 
-      {/* Recent Achievements */}
       <div className="flex-1 bg-slate-50 rounded-lg p-3 border border-slate-200">
         <h4 className="text-xs font-semibold text-slate-700 mb-2">Recent Achievements</h4>
         <div className="space-y-2">

@@ -1,12 +1,6 @@
-/**
- * Widget Marketplace
- *
- * Modal for browsing and adding widgets to the dashboard
- */
-
 import { useState } from 'react'
-import type { WidgetType } from '@/types/widgets'
-import { getAllWidgets, type WidgetMetadata } from '@/services/widgetRegistry'
+import type { WidgetType, WidgetMetadata } from '@/types/widgets'
+import { getAllWidgets } from '@/services/widgetRegistry'
 
 interface WidgetMarketplaceProps {
   isOpen: boolean
@@ -35,7 +29,6 @@ export default function WidgetMarketplace({ isOpen, onClose, onAddWidget }: Widg
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col animate-slideUp">
-        {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-t-2xl">
           <div className="flex items-center justify-between">
             <div>
@@ -45,6 +38,7 @@ export default function WidgetMarketplace({ isOpen, onClose, onAddWidget }: Widg
             <button
               onClick={onClose}
               className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+              aria-label="Close marketplace"
             >
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -53,7 +47,6 @@ export default function WidgetMarketplace({ isOpen, onClose, onAddWidget }: Widg
           </div>
         </div>
 
-        {/* Category Filter */}
         <div className="px-6 py-4 border-b border-slate-200 overflow-x-auto">
           <div className="flex gap-2">
             {categories.map((category) => (
@@ -75,7 +68,6 @@ export default function WidgetMarketplace({ isOpen, onClose, onAddWidget }: Widg
           </div>
         </div>
 
-        {/* Widget Grid */}
         <div className="flex-1 overflow-y-auto p-6">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredWidgets.map((widget) => (

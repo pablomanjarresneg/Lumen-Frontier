@@ -1,7 +1,3 @@
-/**
- * Default Widget Content
- */
-
 export default function DefaultContent() {
   return (
     <div className="text-center text-slate-500 py-8">

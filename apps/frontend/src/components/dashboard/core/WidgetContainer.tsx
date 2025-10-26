@@ -1,15 +1,28 @@
-/**
- * Widget Container Component
- * 
- * Handles individual widget rendering with drag, resize, and minimize functionality.
- */
-
 import { useState } from 'react'
 import WidgetHeader from './WidgetHeader'
 import WidgetContentRenderer from './WidgetContentRenderer'
 import ResizeHandle from './ResizeHandle'
-import { useDrag, useResize } from './hooks'
-import type { WidgetContainerProps } from './types/'
+import { useDrag } from '../hooks/useDrag'
+import { useResize } from '../hooks/useResize'
+import type { WidgetConfig } from '@/types/widgets'
+
+interface Widget extends WidgetConfig {
+  x: number
+  y: number
+  width: number
+  height: number
+  color?: string
+  icon?: string
+  minimized?: boolean
+  content?: any
+}
+
+interface WidgetContainerProps {
+  widget: Widget
+  isEditMode: boolean
+  onUpdate: (updates: Partial<Widget>) => void
+  onRemove: () => void
+}
 
 export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove }: WidgetContainerProps) {
   const { isDragging, handleDragStart } = useDrag(

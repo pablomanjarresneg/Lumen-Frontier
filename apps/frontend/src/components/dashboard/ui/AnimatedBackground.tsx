@@ -1,7 +1,3 @@
-/**
- * Animated Background Component
- */
-
 export default function AnimatedBackground() {
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none">

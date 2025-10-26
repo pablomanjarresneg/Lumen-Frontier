@@ -1,9 +1,3 @@
-/**
- * Notes Widget
- *
- * Quick notes and thoughts capture
- */
-
 import { useState, useEffect } from 'react'
 import type { WidgetProps } from '@/types/widgets'
 
@@ -18,7 +12,6 @@ export default function NotesWidget({ config, onUpdate }: WidgetProps) {
   const [newNoteText, setNewNoteText] = useState('')
   const [isAdding, setIsAdding] = useState(false)
 
-  // Save notes to config when they change (with proper dependency to avoid infinite loop)
   useEffect(() => {
     if (JSON.stringify(notes) !== JSON.stringify(config.data?.notes)) {
       onUpdate({ data: { ...config.data, notes } })
@@ -45,7 +38,6 @@ export default function NotesWidget({ config, onUpdate }: WidgetProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Add Note Button */}
       {!isAdding && (
         <button
           onClick={() => setIsAdding(true)}
@@ -55,7 +47,6 @@ export default function NotesWidget({ config, onUpdate }: WidgetProps) {
         </button>
       )}
 
-      {/* Add Note Form */}
       {isAdding && (
         <div className="mb-3 p-3 bg-green-50 rounded-lg border border-green-200">
           <textarea
@@ -92,7 +83,6 @@ export default function NotesWidget({ config, onUpdate }: WidgetProps) {
         </div>
       )}
 
-      {/* Notes List */}
       <div className="flex-1 overflow-y-auto space-y-2">
         {notes.length === 0 ? (
           <div className="text-center py-8 text-slate-400">

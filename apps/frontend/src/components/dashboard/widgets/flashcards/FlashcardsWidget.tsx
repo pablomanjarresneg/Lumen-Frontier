@@ -1,13 +1,6 @@
-/**
- * Flashcards Widget
- *
- * Review flashcards with flip animation
- */
-
 import { useState } from 'react'
 import type { WidgetProps } from '@/types/widgets'
 
-// Sample flashcards data
 const SAMPLE_FLASHCARDS = [
   {
     id: '1',
@@ -44,7 +37,6 @@ export default function FlashcardsWidget({ config }: WidgetProps) {
       setCurrentIndex(currentIndex + 1)
       if (!isFlipped) setStudiedCount(studiedCount + 1)
     } else {
-      // Reset to beginning
       setCurrentIndex(0)
       setStudiedCount(flashcards.length)
     }
@@ -63,7 +55,6 @@ export default function FlashcardsWidget({ config }: WidgetProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Progress Bar */}
       <div className="mb-4">
         <div className="flex justify-between text-xs text-slate-600 mb-1">
           <span>Progress</span>
@@ -77,7 +68,6 @@ export default function FlashcardsWidget({ config }: WidgetProps) {
         </div>
       </div>
 
-      {/* Flashcard */}
       <div className="flex-1 flex items-center justify-center">
         <div
           className={`relative w-full h-64 cursor-pointer perspective-1000`}
@@ -88,7 +78,6 @@ export default function FlashcardsWidget({ config }: WidgetProps) {
               isFlipped ? 'rotate-y-180' : ''
             }`}
           >
-            {/* Front of card */}
             <div className="absolute w-full h-full backface-hidden bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-xl p-6 flex flex-col items-center justify-center shadow-lg">
               <div className="text-xs font-semibold text-purple-600 bg-purple-100 px-3 py-1 rounded-full mb-4">
                 {currentCard.category}
@@ -99,7 +88,6 @@ export default function FlashcardsWidget({ config }: WidgetProps) {
               <p className="text-xs text-slate-500 mt-6">Click to reveal answer</p>
             </div>
 
-            {/* Back of card */}
             <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-xl p-6 flex flex-col items-center justify-center shadow-lg">
               <svg className="w-8 h-8 text-indigo-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -113,7 +101,6 @@ export default function FlashcardsWidget({ config }: WidgetProps) {
         </div>
       </div>
 
-      {/* Navigation */}
       <div className="flex items-center justify-between mt-4">
         <button
           onClick={handlePrevious}
@@ -143,7 +130,6 @@ export default function FlashcardsWidget({ config }: WidgetProps) {
         </button>
       </div>
 
-      {/* Complete message */}
       {studiedCount === flashcards.length && (
         <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg text-center">
           <p className="text-sm font-medium text-green-800">

@@ -1,18 +1,11 @@
-/**
- * Progress Widget Content
- */
-
-import type { ProgressContentProps } from '../types/'
-
-// Extended props with content structure
-interface Props extends ProgressContentProps {
+interface ProgressContentProps {
   content?: {
     progress?: number
     streak?: number
   }
 }
 
-export default function ProgressContent({ content }: Props) {
+export default function ProgressContent({ content }: ProgressContentProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
