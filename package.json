@@ -1,0 +1,31 @@
+{
+  "name": "lumen-frontier",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lumen Frontier is a modular system where knowledge becomes a world you can explore, test, and expand.",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces",
+    "dev:frontend": "npm run dev --workspace apps/frontend",
+    "dev:backend": "cd apps/backend && python -m uvicorn main:app --reload",
+    "build": "npm run build --workspaces",
+    "build:frontend": "npm run build --workspace apps/frontend",
+    "build:vercel": "cd apps/frontend && npm install && npm run build",
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces",
+    "clean": "npm run clean --workspaces && rm -rf node_modules",
+    "vercel:env": "vercel env pull",
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.1.0",
+    "eslint": "^8.54.0"
+  }
+}
