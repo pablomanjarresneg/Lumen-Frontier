@@ -1,23 +1,15 @@
 import { useState, useEffect } from 'react'
 import WidgetContainer from './core/WidgetContainer'
 import { DashboardTopBar, EditModeIndicator, EmptyDashboard, AnimatedBackground } from './ui'
+import WidgetMarketplace from './marketplace/WidgetMarketplace'
 import { DEFAULT_WIDGETS } from './constants'
-import type { WidgetConfig } from '@/types/widgets'
-
-interface Widget extends WidgetConfig {
-  x: number
-  y: number
-  width: number
-  height: number
-  color?: string
-  icon?: string
-  minimized?: boolean
-  content?: any
-}
+import type { WidgetConfig, WidgetType } from '@/types/widgets'
+import { getWidgetMetadata } from '@/services/widgetRegistry'
 
 export default function Dashboard() {
-  const [widgets, setWidgets] = useState<Widget[]>([])
+  const [widgets, setWidgets] = useState<WidgetConfig[]>([])
   const [isEditMode, setIsEditMode] = useState(false)
+  const [isMarketplaceOpen, setIsMarketplaceOpen] = useState(false)
 
   useEffect(() => {
     const stored = localStorage.getItem('dashboard_widgets')
@@ -38,8 +30,12 @@ export default function Dashboard() {
     }
   }, [widgets])
 
-  const updateWidget = (id: string, updates: Partial<Widget>) => {
-    setWidgets(prev => prev.map(w => w.id === id ? { ...w, ...updates } : w))
+  const updateWidget = (id: string, updates: Partial<WidgetConfig>) => {
+    setWidgets(prev => prev.map(w => w.id === id ? {
+      ...w,
+      ...updates,
+      updatedAt: Date.now()
+    } : w))
   }
 
   const removeWidget = (id: string) => {
@@ -48,19 +44,31 @@ export default function Dashboard() {
     }
   }
 
-  const addNewWidget = () => {
-    const newWidget: Widget = {
-      id: Date.now().toString(),
-      type: 'custom',
-      title: 'New Widget',
-      color: 'from-purple-400 to-indigo-600',
-      icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6',
-      x: 100,
-      y: 100,
-      width: 300,
-      height: 250,
+  const addWidgetFromMarketplace = (type: WidgetType) => {
+    const metadata = getWidgetMetadata(type)
+    const sizeMap = {
+      small: { width: 280, height: 200 },
+      medium: { width: 350, height: 300 },
+      large: { width: 450, height: 400 },
+      xlarge: { width: 600, height: 500 }
+    }
+    const size = sizeMap[metadata.defaultSize]
+
+    const newWidget: WidgetConfig = {
+      id: `widget_${Date.now()}`,
+      type,
+      title: metadata.name,
+      position: {
+        x: 20 + (widgets.length % 3) * 370,
+        y: 80 + Math.floor(widgets.length / 3) * 320,
+        width: size.width,
+        height: size.height
+      },
+      data: {},
+      settings: {},
       minimized: false,
-      content: {}
+      createdAt: Date.now(),
+      updatedAt: Date.now()
     }
     setWidgets(prev => [...prev, newWidget])
   }
@@ -82,14 +90,14 @@ export default function Dashboard() {
 
       <DashboardTopBar
         isEditMode={isEditMode}
-        onAddWidget={addNewWidget}
+        onAddWidget={() => setIsMarketplaceOpen(true)}
         onToggleEditMode={toggleEditMode}
         onReset={resetDashboard}
       />
 
       <div className="pt-20 pb-8 px-4 relative min-h-screen">
         {widgets.length === 0 ? (
-          <EmptyDashboard onAddWidget={addNewWidget} />
+          <EmptyDashboard onAddWidget={() => setIsMarketplaceOpen(true)} />
         ) : (
           <div className="relative" style={{ minHeight: '800px' }}>
             {widgets.map(widget => (
@@ -106,6 +114,12 @@ export default function Dashboard() {
       </div>
 
       <EditModeIndicator isEditMode={isEditMode} />
+
+      <WidgetMarketplace
+        isOpen={isMarketplaceOpen}
+        onClose={() => setIsMarketplaceOpen(false)}
+        onAddWidget={addWidgetFromMarketplace}
+      />
     </div>
   )
 }

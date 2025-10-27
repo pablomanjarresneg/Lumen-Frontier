@@ -1,39 +1,42 @@
 import { useState } from 'react'
 import WidgetHeader from './WidgetHeader'
-import WidgetContentRenderer from './WidgetContentRenderer'
+import WidgetRenderer from './WidgetRenderer'
 import ResizeHandle from './ResizeHandle'
 import { useDrag } from '../hooks/useDrag'
 import { useResize } from '../hooks/useResize'
 import type { WidgetConfig } from '@/types/widgets'
 
-interface Widget extends WidgetConfig {
-  x: number
-  y: number
-  width: number
-  height: number
-  color?: string
-  icon?: string
-  minimized?: boolean
-  content?: any
-}
-
 interface WidgetContainerProps {
-  widget: Widget
+  widget: WidgetConfig
   isEditMode: boolean
-  onUpdate: (updates: Partial<Widget>) => void
+  onUpdate: (updates: Partial<WidgetConfig>) => void
   onRemove: () => void
 }
 
 export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove }: WidgetContainerProps) {
   const { isDragging, handleDragStart } = useDrag(
-    { x: widget.x, y: widget.y },
-    onUpdate,
+    { x: widget.position.x, y: widget.position.y },
+    (positionUpdates) => {
+      onUpdate({
+        position: {
+          ...widget.position,
+          ...positionUpdates
+        }
+      })
+    },
     isEditMode
   )
-  
+
   const { isResizing, handleResizeStart } = useResize(
-    { width: widget.width, height: widget.height },
-    onUpdate,
+    { width: widget.position.width, height: widget.position.height },
+    (sizeUpdates) => {
+      onUpdate({
+        position: {
+          ...widget.position,
+          ...sizeUpdates
+        }
+      })
+    },
     isEditMode
   )
 
@@ -65,7 +68,13 @@ export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove
 
       {!widget.minimized && (
         <div className="widget-content p-5 overflow-auto glass-content" style={{ height: 'calc(100% - 56px)' }}>
-          <WidgetContentRenderer widget={widget} />
+          <WidgetRenderer
+            config={widget}
+            onUpdate={onUpdate}
+            onRemove={onRemove}
+            onMinimize={toggleMinimize}
+            isEditing={isEditMode}
+          />
         </div>
       )}
 
