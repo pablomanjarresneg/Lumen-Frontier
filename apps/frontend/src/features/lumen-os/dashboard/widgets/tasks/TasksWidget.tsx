@@ -88,17 +88,17 @@ export default function TasksWidget({ config, onUpdate }: WidgetProps) {
     <div className="flex flex-col h-full">
       {/* Stats Bar */}
       <div className="grid grid-cols-3 gap-2 mb-4">
-        <div className="text-center p-2 bg-slate-50 rounded-lg">
-          <div className="text-lg font-bold text-slate-700">{stats.total}</div>
-          <div className="text-xs text-slate-500">Total</div>
+        <div className="text-center p-2 bg-white/5 rounded-lg backdrop-blur-sm border border-white/10">
+          <div className="text-lg font-bold text-white">{stats.total}</div>
+          <div className="text-xs text-white/50">Total</div>
         </div>
-        <div className="text-center p-2 bg-blue-50 rounded-lg">
-          <div className="text-lg font-bold text-blue-600">{stats.active}</div>
-          <div className="text-xs text-blue-600">Active</div>
+        <div className="text-center p-2 bg-blue-500/10 rounded-lg backdrop-blur-sm border border-blue-500/20">
+          <div className="text-lg font-bold text-blue-400">{stats.active}</div>
+          <div className="text-xs text-blue-400/70">Active</div>
         </div>
-        <div className="text-center p-2 bg-green-50 rounded-lg">
-          <div className="text-lg font-bold text-green-600">{stats.completed}</div>
-          <div className="text-xs text-green-600">Done</div>
+        <div className="text-center p-2 bg-green-500/10 rounded-lg backdrop-blur-sm border border-green-500/20">
+          <div className="text-lg font-bold text-green-400">{stats.completed}</div>
+          <div className="text-xs text-green-400/70">Done</div>
         </div>
       </div>
 
@@ -110,8 +110,8 @@ export default function TasksWidget({ config, onUpdate }: WidgetProps) {
             onClick={() => setFilter(f)}
             className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-medium transition-all ${
               filter === f
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/30'
+                : 'bg-white/5 text-white/60 hover:text-white/90 hover:bg-white/10 border border-white/10'
             }`}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -120,7 +120,7 @@ export default function TasksWidget({ config, onUpdate }: WidgetProps) {
       </div>
 
       {/* Add Task Form */}
-      <div className="mb-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+      <div className="mb-3 p-3 bg-white/5 rounded-lg border border-white/10 backdrop-blur-sm">
         <div className="flex gap-2 mb-2">
           <input
             type="text"
@@ -128,22 +128,22 @@ export default function TasksWidget({ config, onUpdate }: WidgetProps) {
             onChange={(e) => setNewTaskText(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && addTask()}
             placeholder="Add a new task..."
-            className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
           />
         </div>
         <div className="flex gap-2">
           <select
             value={newTaskPriority}
             onChange={(e) => setNewTaskPriority(e.target.value as 'low' | 'medium' | 'high')}
-            className="flex-1 px-2 py-1.5 border border-slate-300 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-2 py-1.5 bg-white/5 border border-white/10 rounded text-xs text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
           >
-            <option value="low">Low Priority</option>
-            <option value="medium">Medium Priority</option>
-            <option value="high">High Priority</option>
+            <option value="low" className="bg-gray-800">Low Priority</option>
+            <option value="medium" className="bg-gray-800">Medium Priority</option>
+            <option value="high" className="bg-gray-800">High Priority</option>
           </select>
           <button
             onClick={addTask}
-            className="px-4 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="px-4 py-1.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-sm rounded-lg hover:shadow-lg hover:shadow-blue-500/30 transition-all font-medium"
           >
             Add
           </button>
@@ -153,7 +153,7 @@ export default function TasksWidget({ config, onUpdate }: WidgetProps) {
       {/* Task List */}
       <div className="flex-1 overflow-y-auto space-y-2">
         {filteredTasks.length === 0 ? (
-          <div className="text-center py-8 text-slate-400">
+          <div className="text-center py-8 text-white/40">
             <svg className="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
             </svg>
@@ -164,9 +164,11 @@ export default function TasksWidget({ config, onUpdate }: WidgetProps) {
           filteredTasks.map((task) => (
             <div
               key={task.id}
-              className={`group p-3 border-l-4 rounded-lg transition-all ${getPriorityColor(task.priority)} ${
-                task.completed ? 'opacity-60' : ''
-              }`}
+              className={`group p-3 border-l-4 rounded-lg transition-all backdrop-blur-sm ${
+                task.priority === 'high' ? 'border-red-500 bg-red-500/10' :
+                task.priority === 'medium' ? 'border-yellow-500 bg-yellow-500/10' :
+                'border-green-500 bg-green-500/10'
+              } ${task.completed ? 'opacity-60' : ''}`}
             >
               <div className="flex items-start gap-3">
                 {/* Checkbox */}
@@ -175,7 +177,7 @@ export default function TasksWidget({ config, onUpdate }: WidgetProps) {
                   className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
                     task.completed
                       ? 'bg-green-500 border-green-500'
-                      : 'border-slate-300 hover:border-green-500'
+                      : 'border-white/30 hover:border-green-500'
                   }`}
                 >
                   {task.completed && (
@@ -187,14 +189,18 @@ export default function TasksWidget({ config, onUpdate }: WidgetProps) {
 
                 {/* Task Content */}
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm ${task.completed ? 'line-through text-slate-500' : 'text-slate-700'}`}>
+                  <p className={`text-sm ${task.completed ? 'line-through text-white/50' : 'text-white'}`}>
                     {task.text}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${getPriorityBadge(task.priority)}`}>
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                      task.priority === 'high' ? 'bg-red-500/20 text-red-400' :
+                      task.priority === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                      'bg-green-500/20 text-green-400'
+                    }`}>
                       {task.priority}
                     </span>
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-white/40">
                       {new Date(task.createdAt).toLocaleDateString()}
                     </span>
                   </div>
@@ -203,7 +209,7 @@ export default function TasksWidget({ config, onUpdate }: WidgetProps) {
                 {/* Delete Button */}
                 <button
                   onClick={() => deleteTask(task.id)}
-                  className="opacity-0 group-hover:opacity-100 p-1.5 text-red-500 hover:bg-red-50 rounded transition-all"
+                  className="opacity-0 group-hover:opacity-100 p-1.5 text-red-400 hover:bg-red-500/20 rounded transition-all"
                   title="Delete task"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

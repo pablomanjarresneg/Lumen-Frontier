@@ -304,7 +304,24 @@ export default function WidgetSettings({ widget, isOpen, onClose, onSave }: Widg
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 aria-label="Long Break Duration"
               />
-              <p className="text-xs text-slate-500 mt-1">Break after 4 focus sessions</p>
+              <p className="text-xs text-slate-500 mt-1">Break after completing all focus blocks</p>
+            </div>
+            
+            <div>
+              <label htmlFor="blocksBeforeLongBreak" className="block text-sm font-medium text-slate-700 mb-2">
+                Focus Blocks Before Long Break
+              </label>
+              <input
+                id="blocksBeforeLongBreak"
+                type="number"
+                min="1"
+                max="10"
+                value={data.blocksBeforeLongBreak || 4}
+                onChange={(e) => setData({ ...data, blocksBeforeLongBreak: parseInt(e.target.value) || 4 })}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                aria-label="Blocks Before Long Break"
+              />
+              <p className="text-xs text-slate-500 mt-1">Number of focus sessions before taking a long break (default: 4)</p>
             </div>
           </div>
         )
