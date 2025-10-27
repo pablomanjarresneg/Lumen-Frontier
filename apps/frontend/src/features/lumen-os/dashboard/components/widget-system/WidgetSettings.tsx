@@ -12,11 +12,22 @@ interface WidgetSettingsProps {
 export default function WidgetSettings({ widget, isOpen, onClose, onSave }: WidgetSettingsProps) {
   const metadata = getWidgetMetadata(widget.type)
   const [settings, setSettings] = useState<Record<string, any>>(widget.settings || {})
+  const [data, setData] = useState<Record<string, any>>(widget.data || {})
 
   if (!isOpen) return null
 
   const handleSave = () => {
     onSave(settings)
+    onClose()
+  }
+
+  const handleSaveWithData = () => {
+    // For pomodoro, we need to update both settings and data
+    if (widget.type === 'pomodoro') {
+      onSave({ ...settings, data })
+    } else {
+      onSave(settings)
+    }
     onClose()
   }
 
@@ -243,7 +254,62 @@ export default function WidgetSettings({ widget, isOpen, onClose, onSave }: Widg
         )
 
       case 'pomodoro':
-      case 'tasks':u
+        return (
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="workDuration" className="block text-sm font-medium text-slate-700 mb-2">
+                Focus Duration (minutes)
+              </label>
+              <input
+                id="workDuration"
+                type="number"
+                min="1"
+                max="120"
+                value={data.workDuration || 25}
+                onChange={(e) => setData({ ...data, workDuration: parseInt(e.target.value) || 1 })}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                aria-label="Focus Duration"
+              />
+              <p className="text-xs text-slate-500 mt-1">How long each focus session lasts</p>
+            </div>
+            
+            <div>
+              <label htmlFor="shortBreakDuration" className="block text-sm font-medium text-slate-700 mb-2">
+                Short Break (minutes)
+              </label>
+              <input
+                id="shortBreakDuration"
+                type="number"
+                min="1"
+                max="30"
+                value={data.shortBreakDuration || 5}
+                onChange={(e) => setData({ ...data, shortBreakDuration: parseInt(e.target.value) || 1 })}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                aria-label="Short Break Duration"
+              />
+              <p className="text-xs text-slate-500 mt-1">Break after each focus session</p>
+            </div>
+            
+            <div>
+              <label htmlFor="longBreakDuration" className="block text-sm font-medium text-slate-700 mb-2">
+                Long Break (minutes)
+              </label>
+              <input
+                id="longBreakDuration"
+                type="number"
+                min="1"
+                max="60"
+                value={data.longBreakDuration || 15}
+                onChange={(e) => setData({ ...data, longBreakDuration: parseInt(e.target.value) || 1 })}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Long Break Duration"
+              />
+              <p className="text-xs text-slate-500 mt-1">Break after 4 focus sessions</p>
+            </div>
+          </div>
+        )
+
+      case 'tasks':
       case 'goals':
         return (
           <div className="text-center py-8 text-slate-500">
@@ -304,7 +370,7 @@ export default function WidgetSettings({ widget, isOpen, onClose, onSave }: Widg
             Cancel
           </button>
           <button
-            onClick={handleSave}
+            onClick={widget.type === 'pomodoro' ? handleSaveWithData : handleSave}
             className={`flex-1 px-4 py-2.5 bg-gradient-to-r ${metadata.gradient} text-white rounded-lg font-medium hover:shadow-lg transition-all`}
           >
             Save Settings

@@ -48,12 +48,18 @@ export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove
   }
 
   const handleSaveSettings = (settings: Record<string, any>) => {
-    onUpdate({ settings })
+    // For pomodoro, the settings contain data that should be saved to widget.data
+    if (widget.type === 'pomodoro' && settings.data) {
+      onUpdate({ data: settings.data, settings })
+    } else {
+      onUpdate({ settings })
+    }
   }
 
   return (
     <>
       <div
+        id={`widget-${widget.id}`}
         className={`absolute rounded-2xl overflow-hidden backdrop-blur-xl bg-black/40 border border-white/20 ${
           isDragging || isResizing ? '' : 'transition-all duration-200'
         } ${isDragging ? 'shadow-2xl shadow-black/60 scale-[1.02] z-50 bg-black/50' : 'shadow-xl shadow-black/40'} ${

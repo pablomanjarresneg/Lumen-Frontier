@@ -72,4 +72,5 @@ export default function BottomNavBar({ onNavigate }: BottomNavBarProps) {
         </div>
     </div>
   )
+
 }

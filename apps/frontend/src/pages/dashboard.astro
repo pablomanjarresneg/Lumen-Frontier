@@ -16,14 +16,6 @@ import DashboardComponent from '@/lumen-os/dashboard/Dashboard'
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body class="antialiased relative overflow-hidden">
-    <!-- Back to home button -->
-    <a href="/" class="back-button">
-      <svg class="back-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-      </svg>
-      <span class="back-text">Back to Home</span>
-    </a>
-
     <DashboardComponent client:only="react" />
   </body>
 </html>
@@ -35,74 +27,6 @@ import DashboardComponent from '@/lumen-os/dashboard/Dashboard'
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-  }
-
-  /* Back Button */
-  .back-button {
-    position: fixed;
-    top: 1.25rem;
-    left: 1.25rem;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 12px;
-    color: #475569;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.875rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  }
-
-  .back-button:hover {
-    background: rgba(255, 255, 255, 0.9);
-    border-color: rgba(255, 255, 255, 0.8);
-    transform: translateX(-4px);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
-    color: #334155;
-  }
-
-  .back-icon {
-    width: 20px;
-    height: 20px;
-    transition: transform 0.3s ease;
-  }
-
-  .back-button:hover .back-icon {
-    transform: translateX(-4px);
-  }
-
-  .back-text {
-    letter-spacing: 0.02em;
-  }
-
-  /* Mobile adjustments */
-  @media (max-width: 640px) {
-    .back-button {
-      top: 1rem;
-      left: 1rem;
-      padding: 0.625rem 1rem;
-      font-size: 0.8125rem;
-    }
-
-    .back-icon {
-      width: 18px;
-      height: 18px;
-    }
-
-    .back-text {
-      display: none;
-    }
-
-    .back-button::after {
-      content: 'Home';
-      font-size: 0.8125rem;
-    }
   }
 
   /* Liquid Glass Effects */

@@ -147,6 +147,28 @@ export default function Dashboard() {
     setIsEditMode(!isEditMode)
   }
 
+  const handleBottomNavClick = (section: string) => {
+    console.log('Navigate to:', section)
+    
+    // Handle pomo button - add or focus Pomodoro widget
+    if (section === 'pomo') {
+      const existingPomo = widgets.find(w => w.type === 'pomodoro')
+      if (existingPomo) {
+        // If pomodoro widget exists, scroll to it
+        const element = document.getElementById(`widget-${existingPomo.id}`)
+        element?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      } else {
+        // Add new pomodoro widget
+        addWidgetFromMarketplace('pomodoro')
+      }
+    }
+    
+    // Handle other sections similarly
+    if (section === 'theme') {
+      setIsBackgroundModalOpen(true)
+    }
+  }
+
   // Calculate canvas height based on widget positions
   const canvasHeight = widgets.length > 0
     ? Math.max(1200, ...widgets.map(w => w.position.y + w.position.height + 100))
@@ -208,7 +230,7 @@ export default function Dashboard() {
       <EditModeIndicator isEditMode={isEditMode} />
 
       {/* Bottom Navigation Bar */}
-      <BottomNavBar onNavigate={(section) => console.log('Navigate to:', section)} />
+      <BottomNavBar onNavigate={handleBottomNavClick} />
 
       {/* Modals */}
       <WidgetMarketplace

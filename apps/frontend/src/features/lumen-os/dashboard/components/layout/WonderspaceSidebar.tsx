@@ -26,14 +26,22 @@ export default function WonderspaceSidebar({
 
   return (
     <div className="fixed left-0 top-0 bottom-0 w-16 flex flex-col items-center py-4 z-50 backdrop-blur-xl bg-black/40 border-r border-white/20">
-      {/* Logo */}
-      <div className="mb-8">
-        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+      {/* Logo / Home Button */}
+      <a 
+        href="/"
+        className="mb-8 group relative"
+        title="Back to Home"
+      >
+        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center hover:scale-110 transition-transform duration-200 shadow-lg hover:shadow-orange-500/50">
           <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-4 0-7-3-7-7V8.3l7-3.11 7 3.11V13c0 4-3 7-7 7z"/>
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
           </svg>
         </div>
-      </div>
+        {/* Tooltip */}
+        <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-black/90 text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">
+          Back to Home
+        </div>
+      </a>
 
       {/* Navigation Icons */}
       <nav className="flex-1 flex flex-col gap-4 items-center">
