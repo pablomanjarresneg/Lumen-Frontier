@@ -1,10 +1,11 @@
 import { useState } from 'react'
 
 interface BottomNavBarProps {
-  onNavigate?: (section: string) => void
+  onNavigate: (section: string) => void
+  isVisible?: boolean
 }
 
-export default function BottomNavBar({ onNavigate }: BottomNavBarProps) {
+export default function BottomNavBar({ onNavigate, isVisible = true }: BottomNavBarProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
   const navItems = [
@@ -19,8 +20,10 @@ export default function BottomNavBar({ onNavigate }: BottomNavBarProps) {
   ]
 
   return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
-      <div className="flex items-center gap-3 backdrop-blur-xl bg-black/40 border border-white/20 rounded-2xl px-4 py-2 shadow-xl shadow-black/40">
+    <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ease-in-out ${
+      isVisible ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0'
+    }`}>
+      <div className="flex items-center gap-3 backdrop-blur-2xl bg-gradient-to-r from-cognac-950/80 via-burgundy-950/80 to-cognac-950/80 border-2 border-brass-700/30 rounded-2xl px-4 py-2 shadow-2xl shadow-black/60">
         {navItems.map((item, index) => (
             <div
               key={item.id}
@@ -31,9 +34,9 @@ export default function BottomNavBar({ onNavigate }: BottomNavBarProps) {
               {/* Tooltip */}
               {hoveredItem === item.id && (
                 <div className="absolute -top-12 left-1/2 -translate-x-1/2 animate-in fade-in slide-in-from-bottom-2 duration-200">
-                  <div className="bg-black/90 text-white text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap shadow-xl">
+                  <div className="bg-gradient-to-r from-cognac-950 to-burgundy-950 text-brass-200 text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap shadow-xl border border-brass-700/30">
                     {item.label}
-                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-black/90 rotate-45"></div>
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-cognac-950 rotate-45 border-r border-b border-brass-700/30"></div>
                   </div>
                 </div>
               )}
@@ -44,16 +47,13 @@ export default function BottomNavBar({ onNavigate }: BottomNavBarProps) {
                 title={item.label}
                 className={`relative p-3 rounded-xl transition-all duration-300 ${
                   hoveredItem === item.id
-                    ? 'scale-125 -translate-y-3'
-                    : 'hover:scale-110'
+                    ? 'scale-125 -translate-y-3 bg-brass-600/20'
+                    : 'hover:scale-110 hover:bg-brass-900/20'
                 }`}
-                style={{
-                  transitionDelay: hoveredItem === item.id ? `${index * 30}ms` : '0ms'
-                }}
               >
                 <svg
                   className={`w-6 h-6 transition-all duration-300 ${
-                    hoveredItem === item.id ? 'text-white scale-110' : 'text-white/70'
+                    hoveredItem === item.id ? 'text-brass-200 scale-110' : 'text-brass-400/70'
                   }`}
                   fill="none"
                   stroke="currentColor"

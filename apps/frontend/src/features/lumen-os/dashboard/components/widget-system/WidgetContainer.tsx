@@ -29,7 +29,7 @@ export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove
         }
       })
     },
-    isEditMode
+    true // Always enabled
   )
 
   const { isResizing, handleResizeStart } = useResize(
@@ -42,7 +42,7 @@ export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove
         }
       })
     },
-    isEditMode,
+    true, // Always enabled
     {
       minWidth: metadata.minWidth,
       minHeight: metadata.minHeight,
@@ -68,12 +68,12 @@ export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove
     <>
       <div
         id={`widget-${widget.id}`}
-        className={`absolute rounded-2xl overflow-hidden backdrop-blur-xl bg-black/40 border border-white/20 ${
+        className={`absolute rounded-2xl overflow-hidden backdrop-blur-2xl bg-gradient-to-br from-cognac-950/40 via-burgundy-950/50 to-forest-950/60 border-2 ${
           isDragging || isResizing ? '' : 'transition-all duration-200'
-        } ${isDragging ? 'shadow-2xl shadow-black/60 scale-[1.02] z-50 bg-black/50' : 'shadow-xl shadow-black/40'} ${
+        } ${isDragging ? 'shadow-2xl shadow-brass-900/60 scale-[1.02] z-50 border-brass-600/50' : 'shadow-xl shadow-black/60 border-brass-800/30'} ${
           isResizing ? 'z-50' : ''
         } ${widget.minimized ? 'h-auto' : ''} ${
-          isEditMode && !isDragging && !isResizing ? 'ring-2 ring-blue-500/50' : ''
+          isEditMode && !isDragging && !isResizing ? 'ring-2 ring-brass-500/50' : ''
         }`}
         // eslint-disable-next-line react/forbid-dom-props
         style={{
@@ -96,7 +96,7 @@ export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove
         />
  
       {!widget.minimized && (
-        <div className="widget-content p-5 overflow-auto text-white h-[calc(100%-56px)]">
+        <div className="widget-content p-3 overflow-auto text-white h-[calc(100%-56px)]">
           <WidgetRenderer
             config={widget}
             onUpdate={onUpdate}
@@ -108,7 +108,7 @@ export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove
       )}
 
         <ResizeHandle
-          isEditMode={isEditMode}
+          isEditMode={true} // Always visible
           isMinimized={widget.minimized || false}
           onResizeStart={handleResizeStart}
         />

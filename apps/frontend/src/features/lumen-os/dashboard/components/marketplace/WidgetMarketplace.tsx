@@ -27,27 +27,27 @@ export default function WidgetMarketplace({ isOpen, onClose, onAddWidget }: Widg
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col animate-slideUp">
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-t-2xl">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-8 animate-fadeIn">
+      <div className="backdrop-blur-xl bg-gradient-to-br from-cognac-950/90 via-burgundy-950/90 to-forest-950/90 border-2 border-brass-700/30 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col animate-slideUp m-4">
+        <div className="bg-gradient-to-r from-brass-900/40 to-cognac-900/40 p-6 rounded-t-2xl border-b border-brass-800/30">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-white mb-1">Widget Marketplace</h2>
-              <p className="text-blue-100 text-sm">Add powerful widgets to customize your dashboard</p>
+              <h2 className="text-2xl font-bold text-brass-200 mb-1">Widget Marketplace</h2>
+              <p className="text-ivory-200/70 text-sm">Add elegant widgets to customize your dashboard</p>
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+              className="p-2 hover:bg-brass-900/30 rounded-lg transition-colors"
               aria-label="Close marketplace"
             >
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-brass-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
         </div>
 
-        <div className="px-6 py-4 border-b border-slate-200 overflow-x-auto">
+        <div className="px-6 py-4 border-b border-brass-800/30 overflow-x-auto">
           <div className="flex gap-2">
             {categories.map((category) => (
               <button
@@ -55,8 +55,8 @@ export default function WidgetMarketplace({ isOpen, onClose, onAddWidget }: Widg
                 onClick={() => setSelectedCategory(category.id)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap ${
                   selectedCategory === category.id
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    ? 'bg-gradient-to-r from-brass-600 to-cognac-600 text-white shadow-lg shadow-brass-900/40 border border-brass-600/50'
+                    : 'bg-cognac-950/30 text-brass-300/70 hover:bg-cognac-900/40 hover:text-brass-200 border border-brass-800/20'
                 }`}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,19 +73,19 @@ export default function WidgetMarketplace({ isOpen, onClose, onAddWidget }: Widg
             {filteredWidgets.map((widget) => (
               <div
                 key={widget.type}
-                className="group relative bg-gradient-to-br from-slate-50 to-white border-2 border-slate-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-lg transition-all"
+                className="group relative backdrop-blur-xl bg-gradient-to-br from-cognac-950/40 to-burgundy-950/30 border-2 border-brass-800/30 rounded-xl p-5 hover:border-brass-600/50 hover:shadow-lg hover:shadow-brass-950/50 transition-all"
               >
-                <div className={`w-12 h-12 bg-gradient-to-br ${widget.gradient} rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className={`w-12 h-12 bg-gradient-to-br ${widget.gradient} rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg border border-brass-700/30`}>
+                  <svg className="w-6 h-6 text-ivory-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={widget.icon} />
                   </svg>
                 </div>
 
-                <h3 className="font-bold text-slate-900 mb-1">{widget.name}</h3>
-                <p className="text-sm text-slate-600 mb-3">{widget.description}</p>
+                <h3 className="font-bold text-brass-200 mb-1">{widget.name}</h3>
+                <p className="text-sm text-ivory-200/70 mb-3">{widget.description}</p>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-xs px-2 py-1 bg-slate-100 text-slate-600 rounded-full capitalize">
+                  <span className="text-xs px-2 py-1 bg-brass-950/40 text-brass-400 rounded-full capitalize border border-brass-800/30">
                     {widget.category}
                   </span>
                   <button
@@ -93,7 +93,7 @@ export default function WidgetMarketplace({ isOpen, onClose, onAddWidget }: Widg
                       onAddWidget(widget.type)
                       onClose()
                     }}
-                    className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                    className="px-3 py-1.5 bg-gradient-to-r from-brass-600 to-cognac-600 hover:from-brass-500 hover:to-cognac-500 text-white text-sm font-medium rounded-lg transition-all shadow-md hover:shadow-lg hover:shadow-brass-600/40"
                   >
                     Add Widget
                   </button>
@@ -104,10 +104,10 @@ export default function WidgetMarketplace({ isOpen, onClose, onAddWidget }: Widg
 
           {filteredWidgets.length === 0 && (
             <div className="text-center py-12">
-              <svg className="w-16 h-16 mx-auto text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-16 h-16 mx-auto text-brass-400/30 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
               </svg>
-              <p className="text-slate-500">No widgets found in this category</p>
+              <p className="text-ivory-200/50">No widgets found in this category</p>
             </div>
           )}
         </div>

@@ -43,6 +43,7 @@ export default function Dashboard() {
   const [isMarketplaceOpen, setIsMarketplaceOpen] = useState(false)
   const [isBackgroundModalOpen, setIsBackgroundModalOpen] = useState(false)
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null)
+  const [uiVisible, setUiVisible] = useState(true)
 
   useEffect(() => {
     const stored = localStorage.getItem('dashboard_widgets')
@@ -176,17 +177,22 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Fullscreen Background Image with Subtle Blur */}
+      {/* Fullscreen Background Image with Warm Overlay */}
       {backgroundImage ? (
         <>
           <div
             className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10 blur-sm scale-105"
             style={{ backgroundImage: `url(${backgroundImage})` }}
           />
-          <div className="fixed inset-0 bg-black/10 -z-10" />
+          <div className="fixed inset-0 bg-gradient-to-br from-cognac-950/30 via-burgundy-900/40 to-forest-900/50 -z-10" />
         </>
       ) : (
-        <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black -z-10" />
+        <div className="fixed inset-0 bg-gradient-to-br from-cognac-950 via-burgundy-950 to-forest-950 -z-10">
+          {/* Warm ambient glows for depth */}
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-brass-700/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cognac-800/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-burgundy-900/5 rounded-full blur-3xl" />
+        </div>
       )}
 
       {/* WonderSpace Sidebar */}
@@ -196,14 +202,17 @@ export default function Dashboard() {
         onToggleEditMode={toggleEditMode}
         onReset={resetDashboard}
         onUploadBackground={() => setIsBackgroundModalOpen(true)}
+        isVisible={uiVisible}
       />
 
       {/* WonderSpace Top Bar */}
-      <WonderSpaceTopBar />
+      <WonderSpaceTopBar onToggleUI={setUiVisible} uiVisible={uiVisible} />
 
       {/* Main Content Area - offset for sidebar, centered floating widgets */}
-      <div className="pl-16 min-h-screen overflow-y-auto">
-        <div className="p-8 relative max-w-[1920px] mx-auto">
+      <div className={`min-h-screen overflow-y-auto transition-all duration-300 ease-in-out ${
+        uiVisible ? 'pl-16' : 'pl-0'
+      }`}>
+        <div className="px-0.5 py-8 relative max-w-[1920px] mx-auto">
           {widgets.length === 0 ? (
             <EmptyDashboard onAddWidget={() => setIsMarketplaceOpen(true)} />
           ) : (
@@ -230,7 +239,7 @@ export default function Dashboard() {
       <EditModeIndicator isEditMode={isEditMode} />
 
       {/* Bottom Navigation Bar */}
-      <BottomNavBar onNavigate={handleBottomNavClick} />
+      <BottomNavBar onNavigate={handleBottomNavClick} isVisible={uiVisible} />
 
       {/* Modals */}
       <WidgetMarketplace
