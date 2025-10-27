@@ -84,6 +84,48 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetMetadata> = {
     category: 'productivity',
     color: '#6366f1',
     gradient: 'from-indigo-400 to-purple-600'
+  },
+  pomodoro: {
+    type: 'pomodoro',
+    name: 'Pomodoro Timer',
+    description: 'Focus timer with work and break intervals. Stay productive!',
+    icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+    defaultSize: 'medium',
+    minWidth: 320,
+    minHeight: 400,
+    maxWidth: 500,
+    maxHeight: 600,
+    category: 'productivity',
+    color: '#ef4444',
+    gradient: 'from-red-400 to-rose-600'
+  },
+  tasks: {
+    type: 'tasks',
+    name: 'Task List',
+    description: 'Organize your to-dos with priorities and due dates.',
+    icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4',
+    defaultSize: 'medium',
+    minWidth: 350,
+    minHeight: 350,
+    maxWidth: 600,
+    maxHeight: 700,
+    category: 'productivity',
+    color: '#0ea5e9',
+    gradient: 'from-sky-400 to-blue-600'
+  },
+  goals: {
+    type: 'goals',
+    name: 'Study Goals',
+    description: 'Set and track your learning goals and milestones.',
+    icon: 'M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z',
+    defaultSize: 'medium',
+    minWidth: 350,
+    minHeight: 350,
+    maxWidth: 600,
+    maxHeight: 700,
+    category: 'learning',
+    color: '#06b6d4',
+    gradient: 'from-cyan-400 to-teal-600'
   }
 }
 

@@ -4,7 +4,7 @@
  * Core type definitions for the modular widget/plugin system
  */
 
-export type WidgetType = 'notes' | 'flashcards' | 'analytics' | 'quick-access' | 'progress' | 'calendar'
+export type WidgetType = 'notes' | 'flashcards' | 'analytics' | 'quick-access' | 'progress' | 'calendar' | 'pomodoro' | 'tasks' | 'goals'
 
 export type WidgetSize = 'small' | 'medium' | 'large' | 'xlarge'
 
