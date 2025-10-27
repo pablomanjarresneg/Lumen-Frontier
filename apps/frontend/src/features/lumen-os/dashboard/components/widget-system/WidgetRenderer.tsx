@@ -8,6 +8,23 @@ import ProgressWidget from '../../widgets/progress/ProgressWidget'
 import PomodoroWidget from '../../widgets/pomodoro/PomodoroWidget'
 import TasksWidget from '../../widgets/tasks/TasksWidget'
 import GoalsWidget from '../../widgets/goals/GoalsWidget'
+import TrackWidget from '../../widgets/track/TrackWidget'
+import JournalWidget from '../../widgets/journal/JournalWidget'
+import AmbienceWidget from '../../widgets/ambience/AmbienceWidget'
+import MusicWidget from '../../widgets/music/MusicWidget'
+import StatsWidget from '../../widgets/stats/StatsWidget'
+
+const PlaceholderWidget = ({ title, icon }: { title: string; icon: string }) => (
+  <div className="flex items-center justify-center h-full text-brass-300/40">
+    <div className="text-center">
+      <svg className="w-16 h-16 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={icon} />
+      </svg>
+      <p className="text-sm font-medium">{title} Widget</p>
+      <p className="text-xs mt-1">Coming soon...</p>
+    </div>
+  </div>
+)
 
 const WIDGET_COMPONENTS: Record<WidgetType, React.ComponentType<WidgetProps>> = {
   'notes': NotesWidget,
@@ -18,17 +35,12 @@ const WIDGET_COMPONENTS: Record<WidgetType, React.ComponentType<WidgetProps>> = 
   'pomodoro': PomodoroWidget,
   'tasks': TasksWidget,
   'goals': GoalsWidget,
-  'calendar': () => (
-    <div className="flex items-center justify-center h-full text-slate-500">
-      <div className="text-center">
-        <svg className="w-16 h-16 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <p className="text-sm font-medium">Calendar Widget</p>
-        <p className="text-xs mt-1">Coming soon...</p>
-      </div>
-    </div>
-  )
+  'track': TrackWidget,
+  'journal': JournalWidget,
+  'ambience': AmbienceWidget,
+  'music': MusicWidget,
+  'stats': StatsWidget,
+  'calendar': () => <PlaceholderWidget title="Calendar" icon="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
 }
 
 export default function WidgetRenderer(props: WidgetProps) {

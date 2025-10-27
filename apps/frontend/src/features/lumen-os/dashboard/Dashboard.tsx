@@ -150,23 +150,48 @@ export default function Dashboard() {
 
   const handleBottomNavClick = (section: string) => {
     console.log('Navigate to:', section)
-    
-    // Handle pomo button - add or focus Pomodoro widget
-    if (section === 'pomo') {
-      const existingPomo = widgets.find(w => w.type === 'pomodoro')
-      if (existingPomo) {
-        // If pomodoro widget exists, scroll to it
-        const element = document.getElementById(`widget-${existingPomo.id}`)
+
+    // Helper function to add or focus a widget
+    const addOrFocusWidget = (widgetType: WidgetType) => {
+      const existing = widgets.find(w => w.type === widgetType)
+      if (existing) {
+        // If widget exists, scroll to it
+        const element = document.getElementById(`widget-${existing.id}`)
         element?.scrollIntoView({ behavior: 'smooth', block: 'center' })
       } else {
-        // Add new pomodoro widget
-        addWidgetFromMarketplace('pomodoro')
+        // Add new widget
+        addWidgetFromMarketplace(widgetType)
       }
     }
-    
-    // Handle other sections similarly
-    if (section === 'theme') {
-      setIsBackgroundModalOpen(true)
+
+    // Handle navigation based on section
+    switch (section) {
+      case 'pomo':
+        addOrFocusWidget('pomodoro')
+        break
+      case 'track':
+        addOrFocusWidget('track')
+        break
+      case 'journal':
+        addOrFocusWidget('journal')
+        break
+      case 'todo':
+        addOrFocusWidget('tasks')
+        break
+      case 'ambience':
+        addOrFocusWidget('ambience')
+        break
+      case 'music':
+        addOrFocusWidget('music')
+        break
+      case 'stats':
+        addOrFocusWidget('stats')
+        break
+      case 'theme':
+        setIsBackgroundModalOpen(true)
+        break
+      default:
+        console.log(`Navigation for ${section} not yet implemented`)
     }
   }
 
