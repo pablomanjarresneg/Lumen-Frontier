@@ -96,7 +96,7 @@ export default function Dashboard() {
       title: metadata.name,
       position: {
         x: 20 + (widgets.length % 3) * 370,
-        y: 80 + Math.floor(widgets.length / 3) * 320,
+        y: 64 + Math.floor(widgets.length / 3) * 320,
         width: size.width,
         height: size.height
       },
@@ -136,11 +136,15 @@ export default function Dashboard() {
         onReset={resetDashboard}
       />
 
-      <div className="pt-20 pb-8 px-4 relative">
+      <div className="pt-16 pb-8 px-4 relative">
         {widgets.length === 0 ? (
           <EmptyDashboard onAddWidget={() => setIsMarketplaceOpen(true)} />
         ) : (
-          <div className="relative" style={{ minHeight: `${canvasHeight}px` }}>
+          <div
+            className="relative"
+            // eslint-disable-next-line react/forbid-dom-props
+            style={{ minHeight: `${canvasHeight}px` }} // Dynamic height based on widget positions
+          >
             {widgets.map(widget => (
               <WidgetContainer
                 key={widget.id}

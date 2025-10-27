@@ -9,12 +9,23 @@ export default function ResizeHandle({ isEditMode, isMinimized, onResizeStart }:
 
   return (
     <div
-      className="resize-handle absolute bottom-0 right-0 w-6 h-6 cursor-nwse-resize z-10"
+      className="resize-handle absolute bottom-0 right-0 w-8 h-8 cursor-nwse-resize z-20 group touch-none"
       onMouseDown={onResizeStart}
     >
-      <svg className="w-full h-full text-slate-400 opacity-50 hover:opacity-100" viewBox="0 0 24 24">
-        <path fill="currentColor" d="M22 22H20V20H22V22M22 18H20V16H22V18M18 22H16V20H18V22M18 18H16V16H18V18M14 22H12V20H14V22M22 14H20V12H22V14Z" />
-      </svg>
+      {/* Larger invisible hit area */}
+      <div className="absolute inset-0 -m-2"></div>
+
+      {/* Visual indicator */}
+      <div className="absolute bottom-1 right-1 flex flex-col gap-0.5 pointer-events-none">
+        <div className="flex gap-0.5">
+          <div className="w-1 h-1 bg-white/40 rounded-full group-hover:bg-white/80 transition-colors"></div>
+          <div className="w-1 h-1 bg-white/40 rounded-full group-hover:bg-white/80 transition-colors"></div>
+        </div>
+        <div className="flex gap-0.5">
+          <div className="w-1 h-1 bg-white/40 rounded-full group-hover:bg-white/80 transition-colors"></div>
+          <div className="w-1 h-1 bg-white/40 rounded-full group-hover:bg-white/80 transition-colors"></div>
+        </div>
+      </div>
     </div>
   )
 }

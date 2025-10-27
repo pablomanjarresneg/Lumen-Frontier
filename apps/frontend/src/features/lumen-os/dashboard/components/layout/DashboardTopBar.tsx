@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react'
+
 interface DashboardTopBarProps {
   isEditMode: boolean
   onAddWidget: () => void
@@ -11,6 +13,22 @@ export default function DashboardTopBar({
   onToggleEditMode,
   onReset
 }: DashboardTopBarProps) {
+  const [currentTime, setCurrentTime] = useState('')
+  const [currentDate, setCurrentDate] = useState('')
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date()
+      setCurrentTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
+      setCurrentDate(now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }))
+    }
+
+    updateTime()
+    const interval = setInterval(updateTime, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <div className="fixed top-0 left-0 right-0 h-16 glass-topbar backdrop-blur-2xl z-50 border-b border-white/20">
       <div className="h-full px-6 flex items-center justify-between">

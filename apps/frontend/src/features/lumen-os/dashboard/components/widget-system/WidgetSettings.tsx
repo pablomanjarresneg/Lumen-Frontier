@@ -27,16 +27,18 @@ export default function WidgetSettings({ widget, isOpen, onClose, onSave }: Widg
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="maxNotes" className="block text-sm font-medium text-slate-700 mb-2">
                 Max Notes to Display
               </label>
               <input
+                id="maxNotes"
                 type="number"
                 value={settings.maxNotes || 10}
                 onChange={(e) => setSettings({ ...settings, maxNotes: parseInt(e.target.value) })}
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 min="1"
                 max="50"
+                aria-label="Max Notes to Display"
               />
             </div>
             <div className="flex items-center">
@@ -58,13 +60,15 @@ export default function WidgetSettings({ widget, isOpen, onClose, onSave }: Widg
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="timeRange" className="block text-sm font-medium text-slate-700 mb-2">
                 Time Range
               </label>
               <select
+                id="timeRange"
                 value={settings.timeRange || 'week'}
                 onChange={(e) => setSettings({ ...settings, timeRange: e.target.value })}
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                aria-label="Time Range"
               >
                 <option value="day">Last 24 Hours</option>
                 <option value="week">Last Week</option>
@@ -91,10 +95,11 @@ export default function WidgetSettings({ widget, isOpen, onClose, onSave }: Widg
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="dailyGoal" className="block text-sm font-medium text-slate-700 mb-2">
                 Daily Goal (minutes)
               </label>
               <input
+                id="dailyGoal"
                 type="number"
                 value={settings.dailyGoal || 60}
                 onChange={(e) => setSettings({ ...settings, dailyGoal: parseInt(e.target.value) })}
@@ -102,6 +107,7 @@ export default function WidgetSettings({ widget, isOpen, onClose, onSave }: Widg
                 min="5"
                 max="480"
                 step="5"
+                aria-label="Daily Goal in minutes"
               />
             </div>
             <div className="flex items-center">
@@ -123,10 +129,11 @@ export default function WidgetSettings({ widget, isOpen, onClose, onSave }: Widg
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="cardsPerSession" className="block text-sm font-medium text-slate-700 mb-2">
                 Cards per Session
               </label>
               <input
+                id="cardsPerSession"
                 type="number"
                 value={settings.cardsPerSession || 20}
                 onChange={(e) => setSettings({ ...settings, cardsPerSession: parseInt(e.target.value) })}
@@ -134,16 +141,19 @@ export default function WidgetSettings({ widget, isOpen, onClose, onSave }: Widg
                 min="5"
                 max="100"
                 step="5"
+                aria-label="Cards per Session"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="algorithm" className="block text-sm font-medium text-slate-700 mb-2">
                 Review Algorithm
               </label>
               <select
+                id="algorithm"
                 value={settings.algorithm || 'spaced'}
                 onChange={(e) => setSettings({ ...settings, algorithm: e.target.value })}
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                aria-label="Review Algorithm"
               >
                 <option value="random">Random</option>
                 <option value="spaced">Spaced Repetition</option>
@@ -169,16 +179,18 @@ export default function WidgetSettings({ widget, isOpen, onClose, onSave }: Widg
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="maxLinks" className="block text-sm font-medium text-slate-700 mb-2">
                 Number of Quick Links
               </label>
               <input
+                id="maxLinks"
                 type="number"
                 value={settings.maxLinks || 6}
                 onChange={(e) => setSettings({ ...settings, maxLinks: parseInt(e.target.value) })}
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                 min="3"
                 max="12"
+                aria-label="Number of Quick Links"
               />
             </div>
             <div className="flex items-center">
@@ -200,13 +212,15 @@ export default function WidgetSettings({ widget, isOpen, onClose, onSave }: Widg
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="defaultView" className="block text-sm font-medium text-slate-700 mb-2">
                 Default View
               </label>
               <select
+                id="defaultView"
                 value={settings.defaultView || 'month'}
                 onChange={(e) => setSettings({ ...settings, defaultView: e.target.value })}
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                aria-label="Default View"
               >
                 <option value="day">Day</option>
                 <option value="week">Week</option>

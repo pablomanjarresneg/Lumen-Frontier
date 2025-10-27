@@ -23,8 +23,16 @@ export function useDrag(
     if (!isEnabled) return
 
     const target = e.target as HTMLElement
+
+    // Don't drag if clicking on interactive elements
     if (target.closest('.widget-controls')) return
-    if (target.closest('.widget-content')) return // Don't drag from content area
+    if (target.closest('button')) return
+    if (target.closest('input')) return
+    if (target.closest('textarea')) return
+    if (target.closest('select')) return
+
+    // Only allow drag from header area
+    if (!target.closest('.widget-header')) return
 
     e.preventDefault()
     e.stopPropagation()
@@ -45,7 +53,7 @@ export function useDrag(
       const deltaX = e.clientX - dragStartPos.current.x
       const deltaY = e.clientY - dragStartPos.current.y
       const newX = Math.max(0, dragStartPos.current.widgetX + deltaX)
-      const newY = Math.max(80, dragStartPos.current.widgetY + deltaY)
+      const newY = Math.max(64, dragStartPos.current.widgetY + deltaY)
 
       onUpdateRef.current({ x: newX, y: newY })
     }

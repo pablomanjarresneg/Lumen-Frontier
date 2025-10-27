@@ -2,7 +2,7 @@
  * Dashboard Constants
  */
 
-import type { WidgetConfig } from '@/types/widgets'
+import type { WidgetConfig } from '../types'
 
 export const DEFAULT_WIDGETS: WidgetConfig[] = [
   {
@@ -11,7 +11,7 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
     title: 'Quick Notes',
     position: {
       x: 20,
-      y: 80,
+      y: 64,
       width: 350,
       height: 300
     },
@@ -27,7 +27,7 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
     title: 'Learning Progress',
     position: {
       x: 390,
-      y: 80,
+      y: 64,
       width: 350,
       height: 250
     },
@@ -43,7 +43,7 @@ export const DEFAULT_WIDGETS: WidgetConfig[] = [
     title: 'Analytics',
     position: {
       x: 760,
-      y: 80,
+      y: 64,
       width: 400,
       height: 300
     },

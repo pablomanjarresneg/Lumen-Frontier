@@ -5,7 +5,7 @@ interface WidgetHeaderProps {
   widget: WidgetConfig
   isEditMode: boolean
   isDragging: boolean
-  onDragStart: (e: React.MouseEvent) => void
+  onDragStart: (e: React.MouseEvent<HTMLDivElement>) => void
   onRemove: () => void
   onMinimize: () => void
   onSettings: () => void
@@ -24,7 +24,7 @@ export default function WidgetHeader({
 
   return (
     <div
-      className={`glass-header bg-gradient-to-r ${metadata.gradient} px-4 py-3.5 flex items-center justify-between backdrop-blur-xl border-b border-white/20 ${
+      className={`widget-header glass-header bg-gradient-to-r ${metadata.gradient} px-4 py-3.5 flex items-center justify-between backdrop-blur-xl border-b border-white/20 ${
         isEditMode && !isDragging ? 'cursor-grab hover:bg-opacity-90' : ''
       } ${isDragging ? 'cursor-grabbing' : ''}`}
       onMouseDown={onDragStart}

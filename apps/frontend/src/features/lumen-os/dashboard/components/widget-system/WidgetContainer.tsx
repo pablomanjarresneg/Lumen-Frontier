@@ -58,8 +58,12 @@ export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove
           isDragging || isResizing ? '' : 'transition-all duration-200'
         } ${isDragging ? 'shadow-glass-lg scale-[1.02] z-50 glass-widget-dragging' : 'shadow-glass'} ${
           isResizing ? 'z-50' : ''
-        } ${widget.minimized ? 'h-auto' : ''}`}
+        } ${widget.minimized ? 'h-auto' : ''} ${
+          isEditMode && !isDragging && !isResizing ? 'ring-2 ring-blue-400/50 ring-offset-2' : ''
+        }`}
+        // eslint-disable-next-line react/forbid-dom-props
         style={{
+          // Dynamic positioning - must use inline styles for draggable widgets
           left: `${widget.position.x}px`,
           top: `${widget.position.y}px`,
           width: widget.minimized ? '280px' : `${widget.position.width}px`,
@@ -78,7 +82,7 @@ export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove
         />
  
       {!widget.minimized && (
-        <div className="widget-content p-5 overflow-auto glass-content" style={{ height: 'calc(100% - 56px)' }}>
+        <div className="widget-content p-5 overflow-auto glass-content h-[calc(100%-56px)]">
           <WidgetRenderer
             config={widget}
             onUpdate={onUpdate}
