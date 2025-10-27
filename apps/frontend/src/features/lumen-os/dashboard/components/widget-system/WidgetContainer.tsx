@@ -5,6 +5,7 @@ import WidgetSettings from './WidgetSettings'
 import ResizeHandle from './ResizeHandle'
 import { useDrag } from '../../hooks'
 import { useResize } from '../../hooks'
+import { getWidgetMetadata } from '../../services'
 import type { WidgetConfig } from '../../types'
 
 interface WidgetContainerProps {
@@ -16,6 +17,7 @@ interface WidgetContainerProps {
 
 export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove }: WidgetContainerProps) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const metadata = getWidgetMetadata(widget.type)
 
   const { isDragging, handleDragStart } = useDrag(
     { x: widget.position.x, y: widget.position.y },
@@ -40,7 +42,13 @@ export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove
         }
       })
     },
-    isEditMode
+    isEditMode,
+    {
+      minWidth: metadata.minWidth,
+      minHeight: metadata.minHeight,
+      maxWidth: metadata.maxWidth,
+      maxHeight: metadata.maxHeight
+    }
   )
 
   const toggleMinimize = () => {

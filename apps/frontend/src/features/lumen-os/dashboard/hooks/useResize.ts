@@ -5,14 +5,28 @@ interface WidgetSize {
   height: number
 }
 
+interface ResizeConstraints {
+  minWidth?: number
+  minHeight?: number
+  maxWidth?: number
+  maxHeight?: number
+}
+
 export function useResize(
   currentSize: WidgetSize,
   onUpdate: (updates: Partial<WidgetSize>) => void,
-  isEnabled: boolean
+  isEnabled: boolean,
+  constraints?: ResizeConstraints
 ) {
   const [isResizing, setIsResizing] = useState(false)
   const resizeStartPos = useRef({ x: 0, y: 0, width: 0, height: 0 })
   const onUpdateRef = useRef(onUpdate)
+
+  // Default constraints if none provided
+  const minWidth = constraints?.minWidth ?? 250
+  const minHeight = constraints?.minHeight ?? 180
+  const maxWidth = constraints?.maxWidth ?? 1200
+  const maxHeight = constraints?.maxHeight ?? 900
 
   // Keep ref updated
   useEffect(() => {
@@ -38,8 +52,14 @@ export function useResize(
     const handleMouseMove = (e: MouseEvent) => {
       const deltaX = e.clientX - resizeStartPos.current.x
       const deltaY = e.clientY - resizeStartPos.current.y
-      const newWidth = Math.max(250, resizeStartPos.current.width + deltaX)
-      const newHeight = Math.max(180, resizeStartPos.current.height + deltaY)
+      
+      // Apply constraints
+      let newWidth = resizeStartPos.current.width + deltaX
+      let newHeight = resizeStartPos.current.height + deltaY
+      
+      // Clamp to min/max
+      newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth))
+      newHeight = Math.max(minHeight, Math.min(maxHeight, newHeight))
 
       onUpdateRef.current({ width: newWidth, height: newHeight })
     }
