@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { WidgetProps } from '../../types'
 
 interface Note {
@@ -11,12 +11,18 @@ export default function NotesWidget({ config, onUpdate }: WidgetProps) {
   const [notes, setNotes] = useState<Note[]>(config.data?.notes || [])
   const [newNoteText, setNewNoteText] = useState('')
   const [isAdding, setIsAdding] = useState(false)
+  const onUpdateRef = useRef(onUpdate)
+
+  // Keep ref updated
+  useEffect(() => {
+    onUpdateRef.current = onUpdate
+  }, [onUpdate])
 
   useEffect(() => {
     if (JSON.stringify(notes) !== JSON.stringify(config.data?.notes)) {
-      onUpdate({ data: { ...config.data, notes } })
+      onUpdateRef.current({ data: { ...config.data, notes } })
     }
-  }, [notes])
+  }, [notes, config.data])
 
   const addNote = () => {
     if (!newNoteText.trim()) return

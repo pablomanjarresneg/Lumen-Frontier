@@ -54,12 +54,12 @@ export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove
   return (
     <>
       <div
-        className={`absolute glass-widget rounded-3xl overflow-hidden ${
+        className={`absolute rounded-2xl overflow-hidden backdrop-blur-xl bg-black/40 border border-white/20 ${
           isDragging || isResizing ? '' : 'transition-all duration-200'
-        } ${isDragging ? 'shadow-glass-lg scale-[1.02] z-50 glass-widget-dragging' : 'shadow-glass'} ${
+        } ${isDragging ? 'shadow-2xl shadow-black/60 scale-[1.02] z-50 bg-black/50' : 'shadow-xl shadow-black/40'} ${
           isResizing ? 'z-50' : ''
         } ${widget.minimized ? 'h-auto' : ''} ${
-          isEditMode && !isDragging && !isResizing ? 'ring-2 ring-blue-400/50 ring-offset-2' : ''
+          isEditMode && !isDragging && !isResizing ? 'ring-2 ring-blue-500/50' : ''
         }`}
         // eslint-disable-next-line react/forbid-dom-props
         style={{
@@ -82,7 +82,7 @@ export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove
         />
  
       {!widget.minimized && (
-        <div className="widget-content p-5 overflow-auto glass-content h-[calc(100%-56px)]">
+        <div className="widget-content p-5 overflow-auto text-white h-[calc(100%-56px)]">
           <WidgetRenderer
             config={widget}
             onUpdate={onUpdate}

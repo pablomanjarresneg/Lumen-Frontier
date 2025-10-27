@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { WidgetProps } from '../../types'
 
 interface Goal {
@@ -24,12 +24,18 @@ export default function GoalsWidget({ config, onUpdate }: WidgetProps) {
     unit: 'hours',
     category: 'weekly' as const
   })
+  const onUpdateRef = useRef(onUpdate)
+
+  // Keep ref updated
+  useEffect(() => {
+    onUpdateRef.current = onUpdate
+  }, [onUpdate])
 
   useEffect(() => {
     if (JSON.stringify(goals) !== JSON.stringify(config.data?.goals)) {
-      onUpdate({ data: { ...config.data, goals } })
+      onUpdateRef.current({ data: { ...config.data, goals } })
     }
-  }, [goals])
+  }, [goals, config.data])
 
   const addGoal = () => {
     if (!newGoal.title.trim()) return
@@ -157,7 +163,7 @@ export default function GoalsWidget({ config, onUpdate }: WidgetProps) {
             />
             <select
               value={newGoal.category}
-              onChange={(e) => setNewGoal({ ...newGoal, category: e.target.value as any })}
+              onChange={(e) => setNewGoal({ ...newGoal, category: e.target.value as 'daily' | 'weekly' | 'monthly' | 'custom' })}
               className="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="daily">Daily</option>

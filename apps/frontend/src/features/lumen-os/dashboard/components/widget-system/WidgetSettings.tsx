@@ -243,7 +243,7 @@ export default function WidgetSettings({ widget, isOpen, onClose, onSave }: Widg
         )
 
       case 'pomodoro':
-      case 'tasks':
+      case 'tasks':u
       case 'goals':
         return (
           <div className="text-center py-8 text-slate-500">

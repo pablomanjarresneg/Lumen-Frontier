@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import type { WidgetProps } from '../../types'
+import { useState, useEffect, useRef } from 'react'
+import type { WidgetProps} from '../../types'
 
 interface Task {
   id: string
@@ -15,12 +15,18 @@ export default function TasksWidget({ config, onUpdate }: WidgetProps) {
   const [newTaskText, setNewTaskText] = useState('')
   const [newTaskPriority, setNewTaskPriority] = useState<'low' | 'medium' | 'high'>('medium')
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all')
+  const onUpdateRef = useRef(onUpdate)
+
+  // Keep ref updated
+  useEffect(() => {
+    onUpdateRef.current = onUpdate
+  }, [onUpdate])
 
   useEffect(() => {
     if (JSON.stringify(tasks) !== JSON.stringify(config.data?.tasks)) {
-      onUpdate({ data: { ...config.data, tasks } })
+      onUpdateRef.current({ data: { ...config.data, tasks } })
     }
-  }, [tasks])
+  }, [tasks, config.data])
 
   const addTask = () => {
     if (!newTaskText.trim()) return
@@ -128,7 +134,7 @@ export default function TasksWidget({ config, onUpdate }: WidgetProps) {
         <div className="flex gap-2">
           <select
             value={newTaskPriority}
-            onChange={(e) => setNewTaskPriority(e.target.value as any)}
+            onChange={(e) => setNewTaskPriority(e.target.value as 'low' | 'medium' | 'high')}
             className="flex-1 px-2 py-1.5 border border-slate-300 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="low">Low Priority</option>

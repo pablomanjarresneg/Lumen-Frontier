@@ -53,7 +53,7 @@ export function useDrag(
       const deltaX = e.clientX - dragStartPos.current.x
       const deltaY = e.clientY - dragStartPos.current.y
       const newX = Math.max(0, dragStartPos.current.widgetX + deltaX)
-      const newY = Math.max(64, dragStartPos.current.widgetY + deltaY)
+      const newY = Math.max(0, dragStartPos.current.widgetY + deltaY)
 
       onUpdateRef.current({ x: newX, y: newY })
     }

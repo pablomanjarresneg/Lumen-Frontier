@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { WidgetContainer } from './components/widget-system'
-import { DashboardTopBar, EditModeIndicator, EmptyDashboard, AnimatedBackground } from './components/layout'
+import { WonderspaceSidebar, WonderSpaceTopBar, BottomNavBar, BackgroundUploadModal, EditModeIndicator, EmptyDashboard } from './components/layout'
 import { WidgetMarketplace } from './components/marketplace'
 import { DEFAULT_WIDGETS } from './constants'
 import type { WidgetConfig, WidgetType } from './types'
@@ -41,6 +41,8 @@ export default function Dashboard() {
   const [widgets, setWidgets] = useState<WidgetConfig[]>([])
   const [isEditMode, setIsEditMode] = useState(false)
   const [isMarketplaceOpen, setIsMarketplaceOpen] = useState(false)
+  const [isBackgroundModalOpen, setIsBackgroundModalOpen] = useState(false)
+  const [backgroundImage, setBackgroundImage] = useState<string | null>(null)
 
   useEffect(() => {
     const stored = localStorage.getItem('dashboard_widgets')
@@ -62,9 +64,34 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (widgets.length > 0) {
-      localStorage.setItem('dashboard_widgets', JSON.stringify(widgets))
+      try {
+        localStorage.setItem('dashboard_widgets', JSON.stringify(widgets))
+      } catch (error) {
+        console.error('Error saving widgets to localStorage:', error)
+        // Handle quota exceeded or other storage errors gracefully
+        if (error instanceof Error && error.name === 'QuotaExceededError') {
+          console.warn('localStorage quota exceeded - widget data may not persist')
+        }
+      }
     }
   }, [widgets])
+
+  // Load background image from localStorage
+  useEffect(() => {
+    const storedBackground = localStorage.getItem('dashboard_background')
+    if (storedBackground) {
+      setBackgroundImage(storedBackground)
+    }
+  }, [])
+
+  const handleBackgroundUpload = (imageUrl: string) => {
+    setBackgroundImage(imageUrl)
+    if (imageUrl) {
+      localStorage.setItem('dashboard_background', imageUrl)
+    } else {
+      localStorage.removeItem('dashboard_background')
+    }
+  }
 
   const updateWidget = (id: string, updates: Partial<WidgetConfig>) => {
     setWidgets(prev => prev.map(w => w.id === id ? {
@@ -126,44 +153,75 @@ export default function Dashboard() {
     : 1200
 
   return (
-    <div className="min-h-screen relative overflow-y-auto">
-      <AnimatedBackground />
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Fullscreen Background Image with Subtle Blur */}
+      {backgroundImage ? (
+        <>
+          <div
+            className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10 blur-sm scale-105"
+            style={{ backgroundImage: `url(${backgroundImage})` }}
+          />
+          <div className="fixed inset-0 bg-black/10 -z-10" />
+        </>
+      ) : (
+        <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black -z-10" />
+      )}
 
-      <DashboardTopBar
+      {/* WonderSpace Sidebar */}
+      <WonderspaceSidebar
         isEditMode={isEditMode}
         onAddWidget={() => setIsMarketplaceOpen(true)}
         onToggleEditMode={toggleEditMode}
         onReset={resetDashboard}
+        onUploadBackground={() => setIsBackgroundModalOpen(true)}
       />
 
-      <div className="pt-16 pb-8 px-4 relative">
-        {widgets.length === 0 ? (
-          <EmptyDashboard onAddWidget={() => setIsMarketplaceOpen(true)} />
-        ) : (
-          <div
-            className="relative"
-            // eslint-disable-next-line react/forbid-dom-props
-            style={{ minHeight: `${canvasHeight}px` }} // Dynamic height based on widget positions
-          >
-            {widgets.map(widget => (
-              <WidgetContainer
-                key={widget.id}
-                widget={widget}
-                isEditMode={isEditMode}
-                onUpdate={(updates) => updateWidget(widget.id, updates)}
-                onRemove={() => removeWidget(widget.id)}
-              />
-            ))}
-          </div>
-        )}
+      {/* WonderSpace Top Bar */}
+      <WonderSpaceTopBar />
+
+      {/* Main Content Area - offset for sidebar, centered floating widgets */}
+      <div className="pl-16 min-h-screen overflow-y-auto">
+        <div className="p-8 relative max-w-[1920px] mx-auto">
+          {widgets.length === 0 ? (
+            <EmptyDashboard onAddWidget={() => setIsMarketplaceOpen(true)} />
+          ) : (
+            <div
+              className="relative"
+              // eslint-disable-next-line react/forbid-dom-props
+              style={{ minHeight: `${canvasHeight}px` }} // Dynamic height based on widget positions
+            >
+              {widgets.map(widget => (
+                <WidgetContainer
+                  key={widget.id}
+                  widget={widget}
+                  isEditMode={isEditMode}
+                  onUpdate={(updates) => updateWidget(widget.id, updates)}
+                  onRemove={() => removeWidget(widget.id)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
+      {/* Edit Mode Indicator */}
       <EditModeIndicator isEditMode={isEditMode} />
 
+      {/* Bottom Navigation Bar */}
+      <BottomNavBar onNavigate={(section) => console.log('Navigate to:', section)} />
+
+      {/* Modals */}
       <WidgetMarketplace
         isOpen={isMarketplaceOpen}
         onClose={() => setIsMarketplaceOpen(false)}
         onAddWidget={addWidgetFromMarketplace}
+      />
+
+      <BackgroundUploadModal
+        isOpen={isBackgroundModalOpen}
+        onClose={() => setIsBackgroundModalOpen(false)}
+        onUpload={handleBackgroundUpload}
+        currentBackground={backgroundImage}
       />
     </div>
   )
