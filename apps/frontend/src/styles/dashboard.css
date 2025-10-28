@@ -1,0 +1,38 @@
+/* Dashboard Styles - Consolidated from features/lumen-os/dashboard */
+
+/* Dashboard Background */
+.dashboard-background {
+  /* Background image will be set dynamically via JavaScript */
+  background-size: cover;
+  background-position: center;
+}
+
+.dashboard-canvas {
+  /* Canvas height will be set dynamically via JavaScript */
+  transition: min-height 0.3s ease;
+}
+
+/* Widget Container */
+.widget-container {
+  /* Position and size will be set dynamically via JavaScript for draggable widgets */
+  position: absolute;
+  transition: all 0.2s ease;
+}
+
+/* Analytics Widget */
+.activity-bar {
+  /* Height will be set dynamically via JavaScript */
+  transition: height 0.3s ease;
+}
+
+/* Flashcards Widget */
+.progress-bar {
+  /* Width will be set dynamically via JavaScript */
+  transition: width 0.3s ease;
+}
+
+/* Goals Widget */
+.goal-progress-bar {
+  /* Width will be set dynamically via JavaScript */
+  transition: width 0.5s ease;
+}

@@ -1,9 +1,8 @@
-export { default as DashboardTopBar } from "./DashboardTopBar"
-export { default as AnimatedBackground } from "./AnimatedBackground"
-export { default as EditModeIndicator } from "./EditModeIndicator"
-export { default as EmptyDashboard } from "./EmptyDashboard"
-export { default as Sidebar } from "./Sidebar"
+// React components still in use
 export { default as BackgroundUploadModal } from "./BackgroundUploadModal"
 export { default as WonderspaceSidebar } from "./WonderspaceSidebar"
 export { default as WonderSpaceTopBar } from "./WonderSpaceTopBar"
 export { default as BottomNavBar } from "./BottomNavBar"
+
+// Note: AnimatedBackground, EditModeIndicator, and EmptyDashboard 
+// have been converted to Astro components for better performance

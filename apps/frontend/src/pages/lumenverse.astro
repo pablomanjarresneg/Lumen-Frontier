@@ -3,22 +3,16 @@
  * Lumenverse - 3D Space Navigation
  * Explore knowledge through an immersive planetary universe
  */
+import FullscreenLayout from '@/layouts/FullscreenLayout.astro'
 import PlanetaryScene from '@/lumenverse/planetary-scene/PlanetaryScene'
 import '@/styles/global.css'
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lumenverse - Explore Knowledge in 3D Space</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  </head>
-  <body>
-    <!-- Back to home button -->
+<FullscreenLayout
+  title="Lumenverse - Explore Knowledge in 3D Space"
+  description="Navigate through knowledge as an astronaut in space. Explore topics as planets in an immersive 3D universe."
+>
+  <!-- Back to home button -->
     <a href="/" class="back-button">
       <svg class="back-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -30,26 +24,9 @@ import '@/styles/global.css'
     <div id="scene-wrapper">
       <PlanetaryScene client:load />
     </div>
-  </body>
-</html>
+</FullscreenLayout>
 
 <style is:global>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  html, body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #0a0e1a;
-  }
 
   /* Scene Wrapper */
   #scene-wrapper {

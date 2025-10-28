@@ -1,0 +1,40 @@
+---
+// Static indicator that shows when edit mode is active
+// Uses client-side script to subscribe to store
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+---
+
+<div
+  id="edit-mode-indicator"
+  class:list={[
+    "fixed top-6 right-6 glass-indicator bg-gradient-to-r from-blue-500/90 to-purple-500/90 backdrop-blur-xl text-white px-6 py-3 rounded-full shadow-glass-lg z-50 flex items-center gap-3 animate-slideDown border border-white/30",
+    "hidden", // Start hidden
+    className
+  ]}
+>
+  <svg class="w-5 h-5 drop-shadow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+  </svg>
+  <span class="font-semibold text-sm drop-shadow">Edit Mode - Drag widgets to move, resize from corner</span>
+</div>
+
+<script>
+  import { $isEditMode } from '../../stores/dashboardStore'
+
+  const indicator = document.getElementById('edit-mode-indicator')
+
+  if (indicator) {
+    // Subscribe to edit mode changes
+    $isEditMode.subscribe((isEditMode) => {
+      if (isEditMode) {
+        indicator.classList.remove('hidden')
+      } else {
+        indicator.classList.add('hidden')
+      }
+    })
+  }
+</script>
