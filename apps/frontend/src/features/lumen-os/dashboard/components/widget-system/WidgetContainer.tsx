@@ -7,7 +7,7 @@ import { useDrag } from '../../hooks'
 import { useResize } from '../../hooks'
 import { getWidgetMetadata } from '../../services'
 import type { WidgetConfig } from '../../types'
-import './WidgetContainer.css'
+import '@/styles/dashboard.css'
 
 interface WidgetContainerProps {
   widget: WidgetConfig

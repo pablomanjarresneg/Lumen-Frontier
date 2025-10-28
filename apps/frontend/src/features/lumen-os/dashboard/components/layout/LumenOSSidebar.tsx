@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-interface WonderspaceSidebarProps {
+interface LumenOSSidebarProps {
   onAddWidget: () => void
   onToggleEditMode: () => void
   onReset: () => void
@@ -9,14 +9,14 @@ interface WonderspaceSidebarProps {
   isVisible?: boolean
 }
 
-export default function WonderspaceSidebar({
+export default function LumenOSSidebar({
   onAddWidget,
   onToggleEditMode,
   onReset,
   onUploadBackground,
   isEditMode,
   isVisible = true
-}: WonderspaceSidebarProps) {
+}: LumenOSSidebarProps) {
   const [currentTime, setCurrentTime] = useState(new Date())
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
-import './PlanetaryScene.css'
+import '@/styles/lumenverse.css'
 
 interface PlanetConfig {
   name: string

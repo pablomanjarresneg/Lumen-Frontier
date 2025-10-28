@@ -2,31 +2,33 @@
 /**
  * Dashboard Page - LumenOS Core
  */
+import Layout from '@/layouts/Layout.astro'
 import DashboardComponent from '@/lumen-os/dashboard/Dashboard'
+import EditModeIndicator from '@/lumen-os/dashboard/components/layout/EditModeIndicator.astro'
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard - LumenOS</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  </head>
-  <body class="antialiased relative overflow-hidden">
+<Layout title="Dashboard - LumenOS" description="Your personalized learning command center">
+  <div class="dashboard-page">
+    <!-- Astro components (minimal JS) -->
+    <EditModeIndicator />
+
+    <!-- React island for interactive dashboard -->
     <DashboardComponent client:only="react" />
-  </body>
-</html>
+  </div>
+</Layout>
 
 <style is:global>
-  @import '../styles/global.css';
+  .dashboard-page {
+    position: relative;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
 
   body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    font-family: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   /* Liquid Glass Effects */
@@ -35,7 +37,7 @@ import DashboardComponent from '@/lumen-os/dashboard/Dashboard'
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 
+    box-shadow:
       0 8px 32px 0 rgba(31, 38, 135, 0.15),
       inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
       0 0 0 1px rgba(255, 255, 255, 0.1);
@@ -43,7 +45,7 @@ import DashboardComponent from '@/lumen-os/dashboard/Dashboard'
 
   .glass-widget-dragging {
     background: rgba(255, 255, 255, 0.85);
-    box-shadow: 
+    box-shadow:
       0 24px 48px 0 rgba(31, 38, 135, 0.25),
       inset 0 1px 0 0 rgba(255, 255, 255, 0.6),
       0 0 0 1px rgba(255, 255, 255, 0.2);
@@ -111,7 +113,7 @@ import DashboardComponent from '@/lumen-os/dashboard/Dashboard'
 
   .glass-topbar {
     background: rgba(255, 255, 255, 0.6);
-    box-shadow: 
+    box-shadow:
       0 4px 24px 0 rgba(31, 38, 135, 0.1),
       inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
   }
@@ -140,13 +142,13 @@ import DashboardComponent from '@/lumen-os/dashboard/Dashboard'
 
   .glass-empty-state {
     background: rgba(255, 255, 255, 0.5);
-    box-shadow: 
+    box-shadow:
       0 8px 32px 0 rgba(31, 38, 135, 0.15),
       inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
   }
 
   .glass-indicator {
-    box-shadow: 
+    box-shadow:
       0 8px 32px 0 rgba(31, 38, 135, 0.25),
       inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
   }
@@ -161,13 +163,13 @@ import DashboardComponent from '@/lumen-os/dashboard/Dashboard'
   }
 
   .shadow-glass {
-    box-shadow: 
+    box-shadow:
       0 8px 32px 0 rgba(31, 38, 135, 0.15),
       0 0 0 1px rgba(255, 255, 255, 0.1);
   }
 
   .shadow-glass-lg {
-    box-shadow: 
+    box-shadow:
       0 24px 48px 0 rgba(31, 38, 135, 0.25),
       0 0 0 1px rgba(255, 255, 255, 0.2);
   }
@@ -210,6 +212,17 @@ import DashboardComponent from '@/lumen-os/dashboard/Dashboard'
     }
   }
 
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -247,6 +260,10 @@ import DashboardComponent from '@/lumen-os/dashboard/Dashboard'
 
   .animate-slideUp {
     animation: slideUp 0.3s ease-out;
+  }
+
+  .animate-slideDown {
+    animation: slideDown 0.3s ease-out;
   }
 
   .animate-fadeIn {

@@ -1,7 +1,7 @@
 // React components still in use
 export { default as BackgroundUploadModal } from "./BackgroundUploadModal"
-export { default as WonderspaceSidebar } from "./WonderspaceSidebar"
-export { default as WonderSpaceTopBar } from "./WonderSpaceTopBar"
+export { default as LumenOSSidebar } from "./LumenOSSidebar"
+export { default as LumenOSTopBar } from "./LumenOSTopBar"
 export { default as BottomNavBar } from "./BottomNavBar"
 
 // Note: AnimatedBackground, EditModeIndicator, and EmptyDashboard 

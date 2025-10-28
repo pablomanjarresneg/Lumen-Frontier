@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import type { WidgetProps } from '../../types'
-import './GoalsWidget.css'
+import '@/styles/dashboard.css'
 
 interface Goal {
   id: string

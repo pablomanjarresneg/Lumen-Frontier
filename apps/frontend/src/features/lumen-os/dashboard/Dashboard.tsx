@@ -1,11 +1,16 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, lazy, Suspense } from 'react'
+import { useStore } from '@nanostores/react'
 import { WidgetContainer } from './components/widget-system'
-import { WonderspaceSidebar, WonderSpaceTopBar, BottomNavBar, BackgroundUploadModal, EditModeIndicator, EmptyDashboard } from './components/layout'
-import { WidgetMarketplace } from './components/marketplace'
+import { LumenOSSidebar, LumenOSTopBar, BottomNavBar } from './components/layout'
 import { DEFAULT_WIDGETS } from './constants'
 import type { WidgetConfig, WidgetType } from './types'
 import { getWidgetMetadata } from './services'
-import './Dashboard.css'
+import { $isEditMode, $isMarketplaceOpen, $widgets as $widgetsStore } from './stores/dashboardStore'
+import '@/styles/dashboard.css'
+
+// Lazy load heavy modal components
+const WidgetMarketplace = lazy(() => import('./components/marketplace/WidgetMarketplace'))
+const BackgroundUploadModal = lazy(() => import('./components/layout/BackgroundUploadModal'))
 
 // Migration function to convert old widget format to new format
 function migrateOldWidgets(oldWidgets: any[]): WidgetConfig[] {
@@ -41,12 +46,21 @@ function migrateOldWidgets(oldWidgets: any[]): WidgetConfig[] {
 export default function Dashboard() {
   const [widgets, setWidgets] = useState<WidgetConfig[]>([])
   const [isEditMode, setIsEditMode] = useState(false)
-  const [isMarketplaceOpen, setIsMarketplaceOpen] = useState(false)
+  const isMarketplaceOpen = useStore($isMarketplaceOpen)
   const [isBackgroundModalOpen, setIsBackgroundModalOpen] = useState(false)
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null)
   const [uiVisible, setUiVisible] = useState(true)
   const backgroundRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLDivElement>(null)
+
+  // Sync state with Nanostores for Astro components
+  useEffect(() => {
+    $isEditMode.set(isEditMode)
+  }, [isEditMode])
+
+  useEffect(() => {
+    $widgetsStore.set(widgets)
+  }, [widgets])
 
   // Load widgets from localStorage on mount
   useEffect(() => {
@@ -237,18 +251,18 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* WonderSpace Sidebar */}
-      <WonderspaceSidebar
+      {/* LumenOS Sidebar */}
+      <LumenOSSidebar
         isEditMode={isEditMode}
-        onAddWidget={() => setIsMarketplaceOpen(true)}
+        onAddWidget={() => $isMarketplaceOpen.set(true)}
         onToggleEditMode={toggleEditMode}
         onReset={resetDashboard}
         onUploadBackground={() => setIsBackgroundModalOpen(true)}
         isVisible={uiVisible}
       />
 
-      {/* WonderSpace Top Bar */}
-      <WonderSpaceTopBar onToggleUI={setUiVisible} uiVisible={uiVisible} />
+      {/* LumenOS Top Bar */}
+      <LumenOSTopBar onToggleUI={setUiVisible} uiVisible={uiVisible} />
 
       {/* Main Content Area - offset for sidebar, centered floating widgets */}
       <div className={`min-h-screen overflow-y-auto transition-all duration-300 ease-in-out ${
@@ -256,7 +270,23 @@ export default function Dashboard() {
       }`}>
         <div className="px-0.5 py-8 relative max-w-[1920px] mx-auto">
           {widgets.length === 0 ? (
-            <EmptyDashboard onAddWidget={() => setIsMarketplaceOpen(true)} />
+            <div className="flex items-center justify-center min-h-[80vh]">
+              <div className="text-center glass-empty-state p-12 rounded-3xl backdrop-blur-xl border border-white/30 max-w-md">
+                <div className="w-24 h-24 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
+                  <svg className="w-12 h-12 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                  </svg>
+                </div>
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent mb-3">No Widgets</h2>
+                <p className="text-slate-600 mb-6 font-medium">Add widgets to get started</p>
+                <button
+                  onClick={() => $isMarketplaceOpen.set(true)}
+                  className="glass-button px-8 py-3 bg-gradient-to-r from-blue-500/80 to-purple-500/80 text-white rounded-xl font-semibold hover:from-blue-600/90 hover:to-purple-600/90 hover:shadow-xl transition-all duration-200 border border-white/30"
+                >
+                  Add Your First Widget
+                </button>
+              </div>
+            </div>
           ) : (
             <div
               ref={canvasRef}
@@ -276,25 +306,30 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Edit Mode Indicator */}
-      <EditModeIndicator isEditMode={isEditMode} />
-
       {/* Bottom Navigation Bar */}
       <BottomNavBar onNavigate={handleBottomNavClick} isVisible={uiVisible} />
 
-      {/* Modals */}
-      <WidgetMarketplace
-        isOpen={isMarketplaceOpen}
-        onClose={() => setIsMarketplaceOpen(false)}
-        onAddWidget={addWidgetFromMarketplace}
-      />
+      {/* Modals - Lazy loaded */}
+      {isMarketplaceOpen && (
+        <Suspense fallback={<div />}>
+          <WidgetMarketplace
+            isOpen={isMarketplaceOpen}
+            onClose={() => $isMarketplaceOpen.set(false)}
+            onAddWidget={addWidgetFromMarketplace}
+          />
+        </Suspense>
+      )}
 
-      <BackgroundUploadModal
-        isOpen={isBackgroundModalOpen}
-        onClose={() => setIsBackgroundModalOpen(false)}
-        onUpload={handleBackgroundUpload}
-        currentBackground={backgroundImage}
-      />
+      {isBackgroundModalOpen && (
+        <Suspense fallback={<div />}>
+          <BackgroundUploadModal
+            isOpen={isBackgroundModalOpen}
+            onClose={() => setIsBackgroundModalOpen(false)}
+            onUpload={handleBackgroundUpload}
+            currentBackground={backgroundImage}
+          />
+        </Suspense>
+      )}
     </div>
   )
 }

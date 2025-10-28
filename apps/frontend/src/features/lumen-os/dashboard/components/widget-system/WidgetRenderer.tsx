@@ -1,18 +1,30 @@
+import { lazy, Suspense } from 'react'
 import type { WidgetType, WidgetProps } from '../../types'
 
-import NotesWidget from '../../widgets/notes/NotesWidget'
-import FlashcardsWidget from '../../widgets/flashcards/FlashcardsWidget'
-import AnalyticsWidget from '../../widgets/analytics/AnalyticsWidget'
-import QuickAccessWidget from '../../widgets/quick-access/QuickAccessWidget'
-import ProgressWidget from '../../widgets/progress/ProgressWidget'
-import PomodoroWidget from '../../widgets/pomodoro/PomodoroWidget'
-import TasksWidget from '../../widgets/tasks/TasksWidget'
-import GoalsWidget from '../../widgets/goals/GoalsWidget'
-import TrackWidget from '../../widgets/track/TrackWidget'
-import JournalWidget from '../../widgets/journal/JournalWidget'
-import AmbienceWidget from '../../widgets/ambience/AmbienceWidget'
-import MusicWidget from '../../widgets/music/MusicWidget'
-import StatsWidget from '../../widgets/stats/StatsWidget'
+// Lazy load all widgets - each will be in its own chunk
+const NotesWidget = lazy(() => import('../../widgets/notes/NotesWidget'))
+const FlashcardsWidget = lazy(() => import('../../widgets/flashcards/FlashcardsWidget'))
+const AnalyticsWidget = lazy(() => import('../../widgets/analytics/AnalyticsWidget'))
+const QuickAccessWidget = lazy(() => import('../../widgets/quick-access/QuickAccessWidget'))
+const ProgressWidget = lazy(() => import('../../widgets/progress/ProgressWidget'))
+const PomodoroWidget = lazy(() => import('../../widgets/pomodoro/PomodoroWidget'))
+const TasksWidget = lazy(() => import('../../widgets/tasks/TasksWidget'))
+const GoalsWidget = lazy(() => import('../../widgets/goals/GoalsWidget'))
+const TrackWidget = lazy(() => import('../../widgets/track/TrackWidget'))
+const JournalWidget = lazy(() => import('../../widgets/journal/JournalWidget'))
+const AmbienceWidget = lazy(() => import('../../widgets/ambience/AmbienceWidget'))
+const MusicWidget = lazy(() => import('../../widgets/music/MusicWidget'))
+const StatsWidget = lazy(() => import('../../widgets/stats/StatsWidget'))
+
+// Loading fallback component
+const WidgetLoadingFallback = () => (
+  <div className="flex items-center justify-center h-full">
+    <div className="text-center">
+      <div className="w-8 h-8 border-4 border-brass-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+      <p className="text-xs text-brass-300/60">Loading widget...</p>
+    </div>
+  </div>
+)
 
 const PlaceholderWidget = ({ title, icon }: { title: string; icon: string }) => (
   <div className="flex items-center justify-center h-full text-brass-300/40">
@@ -60,7 +72,11 @@ export default function WidgetRenderer(props: WidgetProps) {
   }
 
   try {
-    return <WidgetComponent {...props} />
+    return (
+      <Suspense fallback={<WidgetLoadingFallback />}>
+        <WidgetComponent {...props} />
+      </Suspense>
+    )
   } catch (error) {
     console.error(`Error rendering widget ${props.config.type}:`, error)
     return (

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import type { WidgetProps } from '../../types'
-import './AnalyticsWidget.css'
+import '@/styles/dashboard.css'
 
 export default function AnalyticsWidget({ config }: WidgetProps) {
   const barsRef = useRef<(HTMLDivElement | null)[]>([])

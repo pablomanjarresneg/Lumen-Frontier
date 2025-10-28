@@ -9,7 +9,7 @@ interface BackgroundUploadModalProps {
 
 export default function BackgroundUploadModal({ isOpen, onClose, onUpload, currentBackground }: BackgroundUploadModalProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentBackground)
-  const [isDragging, setIsDragging] = useState(false)
+  const [isDragging, setIsDragginsg] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   if (!isOpen) return null

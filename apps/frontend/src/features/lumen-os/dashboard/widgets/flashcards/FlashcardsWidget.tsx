@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import type { WidgetProps } from '../../types'
-import './FlashcardsWidget.css'
+import '@/styles/dashboard.css'
 
 const SAMPLE_FLASHCARDS = [
   {

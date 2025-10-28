@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 
-interface WonderSpaceTopBarProps {
+interface LumenOSTopBarProps {
   onToggleUI: (visible: boolean) => void
   uiVisible: boolean
 }
 
-export default function WonderSpaceTopBar({ onToggleUI, uiVisible }: WonderSpaceTopBarProps) {
+export default function LumenOSTopBar({ onToggleUI, uiVisible }: LumenOSTopBarProps) {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [isFullscreen, setIsFullscreen] = useState(false)
 

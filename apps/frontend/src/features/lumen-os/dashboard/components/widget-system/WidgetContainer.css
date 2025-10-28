@@ -1,6 +1,0 @@
-/* Widget Container Styles */
-.widget-container {
-  /* Position and size will be set dynamically via JavaScript for draggable widgets */
-  position: absolute;
-  transition: all 0.2s ease;
-}

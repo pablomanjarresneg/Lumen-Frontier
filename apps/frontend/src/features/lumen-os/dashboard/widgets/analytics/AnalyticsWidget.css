@@ -1,6 +1,0 @@
-/* Analytics Widget Styles */
-.activity-bar {
-  /* Height will be set dynamically via JavaScript */
-  transition: height 0.3s ease;
-}
-

@@ -1,5 +1,0 @@
-/* Goals Widget Styles */
-.goal-progress-bar {
-  /* Width will be set dynamically via JavaScript */
-  transition: width 0.5s ease;
-}
