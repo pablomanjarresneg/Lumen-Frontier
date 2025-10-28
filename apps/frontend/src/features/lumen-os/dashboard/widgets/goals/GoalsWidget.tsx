@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import type { WidgetProps } from '../../types'
+import './GoalsWidget.css'
 
 interface Goal {
   id: string
@@ -22,8 +23,9 @@ export default function GoalsWidget({ config, onUpdate }: WidgetProps) {
     description: '',
     target: 10,
     unit: 'hours',
-    category: 'weekly' as const
+    category: 'weekly' as Goal['category']
   })
+  const progressBarRefs = useRef<Map<string, HTMLDivElement>>(new Map())
   const onUpdateRef = useRef(onUpdate)
 
   // Keep ref updated
@@ -36,6 +38,17 @@ export default function GoalsWidget({ config, onUpdate }: WidgetProps) {
       onUpdateRef.current({ data: { ...config.data, goals } })
     }
   }, [goals, config.data])
+
+  // Update progress bar widths dynamically
+  useEffect(() => {
+    goals.forEach(goal => {
+      const progressBar = progressBarRefs.current.get(goal.id)
+      if (progressBar) {
+        const progress = Math.min((goal.current / goal.target) * 100, 100)
+        progressBar.style.width = `${progress}%`
+      }
+    })
+  }, [goals])
 
   const addGoal = () => {
     if (!newGoal.title.trim()) return
@@ -136,6 +149,7 @@ export default function GoalsWidget({ config, onUpdate }: WidgetProps) {
             value={newGoal.title}
             onChange={(e) => setNewGoal({ ...newGoal, title: e.target.value })}
             placeholder="Goal title..."
+            aria-label="Goal title"
             className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg mb-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
             autoFocus
           />
@@ -143,6 +157,7 @@ export default function GoalsWidget({ config, onUpdate }: WidgetProps) {
             value={newGoal.description}
             onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
             placeholder="Description (optional)..."
+            aria-label="Goal description"
             className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg mb-2 text-sm text-white placeholder:text-white/30 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/50"
             rows={2}
           />
@@ -151,6 +166,7 @@ export default function GoalsWidget({ config, onUpdate }: WidgetProps) {
               type="number"
               value={newGoal.target}
               onChange={(e) => setNewGoal({ ...newGoal, target: parseInt(e.target.value) || 0 })}
+              aria-label="Target value"
               className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
               min="1"
             />
@@ -159,11 +175,18 @@ export default function GoalsWidget({ config, onUpdate }: WidgetProps) {
               value={newGoal.unit}
               onChange={(e) => setNewGoal({ ...newGoal, unit: e.target.value })}
               placeholder="hours"
+              aria-label="Unit of measurement"
               className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
             />
             <select
               value={newGoal.category}
-              onChange={(e) => setNewGoal({ ...newGoal, category: e.target.value as 'daily' | 'weekly' | 'monthly' | 'custom' })}
+              onChange={(e) => {
+                const value = e.target.value
+                if (value === 'daily' || value === 'weekly' || value === 'monthly' || value === 'custom') {
+                  setNewGoal({ ...newGoal, category: value })
+                }
+              }}
+              aria-label="Goal category"
               className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
             >
               <option value="daily" className="bg-gray-800">Daily</option>
@@ -250,8 +273,11 @@ export default function GoalsWidget({ config, onUpdate }: WidgetProps) {
                   </div>
                   <div className="h-2.5 bg-white/10 rounded-full overflow-hidden">
                     <div
-                      className={`h-full bg-gradient-to-r ${getCategoryColor(goal.category)} transition-all duration-500`}
-                      style={{ width: `${Math.min(progress, 100)}%` }}
+                      ref={(el) => {
+                        if (el) progressBarRefs.current.set(goal.id, el)
+                      }}
+                      className={`goal-progress-bar h-full bg-gradient-to-r ${getCategoryColor(goal.category)}`}
+                      data-progress={Math.min(progress, 100)}
                     />
                   </div>
                 </div>

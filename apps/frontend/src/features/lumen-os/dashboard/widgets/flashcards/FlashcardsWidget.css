@@ -1,0 +1,5 @@
+/* Flashcards Widget Styles */
+.progress-bar {
+  /* Width will be set dynamically via JavaScript */
+  transition: width 0.3s ease;
+}

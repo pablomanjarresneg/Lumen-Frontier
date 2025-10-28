@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import WidgetHeader from './WidgetHeader'
 import WidgetRenderer from './WidgetRenderer'
 import WidgetSettings from './WidgetSettings'
@@ -7,6 +7,7 @@ import { useDrag } from '../../hooks'
 import { useResize } from '../../hooks'
 import { getWidgetMetadata } from '../../services'
 import type { WidgetConfig } from '../../types'
+import './WidgetContainer.css'
 
 interface WidgetContainerProps {
   widget: WidgetConfig
@@ -17,6 +18,7 @@ interface WidgetContainerProps {
 
 export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove }: WidgetContainerProps) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const widgetRef = useRef<HTMLDivElement>(null)
   const metadata = getWidgetMetadata(widget.type)
 
   const { isDragging, handleDragStart } = useDrag(
@@ -55,6 +57,17 @@ export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove
     onUpdate({ minimized: !widget.minimized })
   }
 
+  // Update widget position/size dynamically via refs
+  useEffect(() => {
+    if (widgetRef.current) {
+      widgetRef.current.style.left = `${widget.position.x}px`
+      widgetRef.current.style.top = `${widget.position.y}px`
+      widgetRef.current.style.width = widget.minimized ? '280px' : `${widget.position.width}px`
+      widgetRef.current.style.height = widget.minimized ? 'auto' : `${widget.position.height}px`
+      widgetRef.current.style.cursor = isDragging ? 'grabbing' : isEditMode ? 'default' : 'default'
+    }
+  }, [widget.position.x, widget.position.y, widget.position.width, widget.position.height, widget.minimized, isDragging, isEditMode])
+
   const handleSaveSettings = (settings: Record<string, any>) => {
     // For pomodoro, the settings contain data that should be saved to widget.data
     if (widget.type === 'pomodoro' && settings.data) {
@@ -67,23 +80,15 @@ export default function WidgetContainer({ widget, isEditMode, onUpdate, onRemove
   return (
     <>
       <div
+        ref={widgetRef}
         id={`widget-${widget.id}`}
-        className={`absolute rounded-2xl overflow-hidden backdrop-blur-2xl bg-gradient-to-br from-cognac-950/40 via-burgundy-950/50 to-forest-950/60 border-2 ${
+        className={`widget-container absolute rounded-2xl overflow-hidden backdrop-blur-2xl bg-gradient-to-br from-cognac-950/40 via-burgundy-950/50 to-forest-950/60 border-2 ${
           isDragging || isResizing ? '' : 'transition-all duration-200'
         } ${isDragging ? 'shadow-2xl shadow-brass-900/60 scale-[1.02] z-50 border-brass-600/50' : 'shadow-xl shadow-black/60 border-brass-800/30'} ${
           isResizing ? 'z-50' : ''
         } ${widget.minimized ? 'h-auto' : ''} ${
           isEditMode && !isDragging && !isResizing ? 'ring-2 ring-brass-500/50' : ''
         }`}
-        // eslint-disable-next-line react/forbid-dom-props
-        style={{
-          // Dynamic positioning - must use inline styles for draggable widgets
-          left: `${widget.position.x}px`,
-          top: `${widget.position.y}px`,
-          width: widget.minimized ? '280px' : `${widget.position.width}px`,
-          height: widget.minimized ? 'auto' : `${widget.position.height}px`,
-          cursor: isDragging ? 'grabbing' : isEditMode ? 'default' : 'default'
-        }}
       >
         <WidgetHeader
           widget={widget}

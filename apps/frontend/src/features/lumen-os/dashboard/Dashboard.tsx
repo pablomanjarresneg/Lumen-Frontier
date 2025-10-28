@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { WidgetContainer } from './components/widget-system'
 import { WonderspaceSidebar, WonderSpaceTopBar, BottomNavBar, BackgroundUploadModal, EditModeIndicator, EmptyDashboard } from './components/layout'
 import { WidgetMarketplace } from './components/marketplace'
 import { DEFAULT_WIDGETS } from './constants'
 import type { WidgetConfig, WidgetType } from './types'
 import { getWidgetMetadata } from './services'
+import './Dashboard.css'
 
 // Migration function to convert old widget format to new format
 function migrateOldWidgets(oldWidgets: any[]): WidgetConfig[] {
@@ -44,7 +45,10 @@ export default function Dashboard() {
   const [isBackgroundModalOpen, setIsBackgroundModalOpen] = useState(false)
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null)
   const [uiVisible, setUiVisible] = useState(true)
+  const backgroundRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLDivElement>(null)
 
+  // Load widgets from localStorage on mount
   useEffect(() => {
     const stored = localStorage.getItem('dashboard_widgets')
     if (stored) {
@@ -200,14 +204,27 @@ export default function Dashboard() {
     ? Math.max(1200, ...widgets.map(w => w.position.y + w.position.height + 100))
     : 1200
 
+  // Set dynamic styles via refs
+  useEffect(() => {
+    if (backgroundRef.current && backgroundImage) {
+      backgroundRef.current.style.backgroundImage = `url(${backgroundImage})`
+    }
+  }, [backgroundImage])
+
+  useEffect(() => {
+    if (canvasRef.current) {
+      canvasRef.current.style.minHeight = `${canvasHeight}px`
+    }
+  }, [canvasHeight])
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Fullscreen Background Image with Warm Overlay */}
       {backgroundImage ? (
         <>
           <div
-            className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10 blur-sm scale-105"
-            style={{ backgroundImage: `url(${backgroundImage})` }}
+            ref={backgroundRef}
+            className="dashboard-background fixed inset-0 bg-cover bg-center bg-no-repeat -z-10 blur-sm scale-105"
           />
           <div className="fixed inset-0 bg-gradient-to-br from-cognac-950/30 via-burgundy-900/40 to-forest-900/50 -z-10" />
         </>
@@ -242,9 +259,8 @@ export default function Dashboard() {
             <EmptyDashboard onAddWidget={() => setIsMarketplaceOpen(true)} />
           ) : (
             <div
-              className="relative"
-              // eslint-disable-next-line react/forbid-dom-props
-              style={{ minHeight: `${canvasHeight}px` }} // Dynamic height based on widget positions
+              ref={canvasRef}
+              className="dashboard-canvas relative"
             >
               {widgets.map(widget => (
                 <WidgetContainer

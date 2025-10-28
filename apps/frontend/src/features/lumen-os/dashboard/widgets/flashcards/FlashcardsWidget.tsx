@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { WidgetProps } from '../../types'
+import './FlashcardsWidget.css'
 
 const SAMPLE_FLASHCARDS = [
   {
@@ -27,9 +28,16 @@ export default function FlashcardsWidget({ config }: WidgetProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
   const [studiedCount, setStudiedCount] = useState(0)
+  const progressBarRef = useRef<HTMLDivElement>(null)
 
   const currentCard = flashcards[currentIndex]
-  const progress = ((studiedCount / flashcards.length) * 100).toFixed(0)
+  const progress = `${((studiedCount / flashcards.length) * 100).toFixed(0)}%`
+
+  useEffect(() => {
+    if (progressBarRef.current) {
+      progressBarRef.current.style.width = progress
+    }
+  }, [progress])
 
   const handleNext = () => {
     setIsFlipped(false)
@@ -62,8 +70,8 @@ export default function FlashcardsWidget({ config }: WidgetProps) {
         </div>
         <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-purple-400 to-indigo-600 transition-all duration-300"
-            style={{ width: `${progress}%` }}
+            ref={progressBarRef}
+            className="progress-bar h-full bg-gradient-to-r from-purple-400 to-indigo-600 transition-all duration-300"
           />
         </div>
       </div>

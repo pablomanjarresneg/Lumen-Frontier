@@ -122,7 +122,9 @@ export default function TasksWidget({ config, onUpdate }: WidgetProps) {
       {/* Add Task Form */}
       <div className="mb-3 p-3 bg-white/5 rounded-lg border border-white/10 backdrop-blur-sm">
         <div className="flex gap-2 mb-2">
+          <label htmlFor="task-input" className="sr-only">New task</label>
           <input
+            id="task-input"
             type="text"
             value={newTaskText}
             onChange={(e) => setNewTaskText(e.target.value)}
@@ -132,10 +134,13 @@ export default function TasksWidget({ config, onUpdate }: WidgetProps) {
           />
         </div>
         <div className="flex gap-2">
+          <label htmlFor="priority-select" className="sr-only">Task priority</label>
           <select
+            id="priority-select"
             value={newTaskPriority}
             onChange={(e) => setNewTaskPriority(e.target.value as 'low' | 'medium' | 'high')}
             className="flex-1 px-2 py-1.5 bg-white/5 border border-white/10 rounded text-xs text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            aria-label="Select task priority"
           >
             <option value="low" className="bg-gray-800">Low Priority</option>
             <option value="medium" className="bg-gray-800">Medium Priority</option>

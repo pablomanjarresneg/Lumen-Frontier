@@ -136,12 +136,15 @@ export default function BackgroundUploadModal({ isOpen, onClose, onUpload, curre
             </div>
           )}
 
+          <label htmlFor="background-file-input" className="sr-only">Upload background image</label>
           <input
+            id="background-file-input"
             ref={fileInputRef}
             type="file"
             accept="image/*"
             onChange={handleFileInput}
             className="hidden"
+            aria-label="Upload background image file"
           />
 
           {/* Info */}

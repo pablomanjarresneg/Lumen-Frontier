@@ -1,6 +1,10 @@
+import { useEffect, useRef } from 'react'
 import type { WidgetProps } from '../../types'
+import './AnalyticsWidget.css'
 
 export default function AnalyticsWidget({ config }: WidgetProps) {
+  const barsRef = useRef<(HTMLDivElement | null)[]>([])
+  
   const stats = {
     totalStudyTime: 127,
     cardsReviewed: 1243,
@@ -11,6 +15,15 @@ export default function AnalyticsWidget({ config }: WidgetProps) {
 
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   const maxActivity = Math.max(...stats.weeklyActivity)
+
+  useEffect(() => {
+    barsRef.current.forEach((bar, index) => {
+      if (bar) {
+        const height = (stats.weeklyActivity[index] / maxActivity) * 100
+        bar.style.height = `${height}%`
+      }
+    })
+  }, [stats.weeklyActivity, maxActivity])
 
   return (
     <div className="flex flex-col h-full">
@@ -63,8 +76,8 @@ export default function AnalyticsWidget({ config }: WidgetProps) {
             <div key={index} className="flex-1 flex flex-col items-center gap-1 h-full">
               <div className="w-full flex items-end justify-center flex-1">
                 <div 
-                  className="w-full bg-gradient-to-t from-blue-500 to-cyan-400 rounded-t transition-all hover:from-blue-600 hover:to-cyan-500 relative group min-h-[10px]"
-                  style={{ height: `${(activity / maxActivity) * 100}%` }}
+                  ref={el => barsRef.current[index] = el}
+                  className="activity-bar w-full bg-gradient-to-t from-blue-500 to-cyan-400 rounded-t transition-all hover:from-blue-600 hover:to-cyan-500 relative group min-h-[10px]"
                 >
                   <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                     {activity}%
