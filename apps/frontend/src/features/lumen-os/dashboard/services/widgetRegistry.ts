@@ -200,7 +200,26 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetMetadata> = {
 }
 
 export function getWidgetMetadata(type: WidgetType): WidgetMetadata {
-  return WIDGET_REGISTRY[type]
+  const meta = WIDGET_REGISTRY[type as WidgetType]
+  if (!meta) {
+    console.warn(`[widgetRegistry] Unknown widget type \"${type}\". Falling back to default metadata.`)
+    return {
+      type: 'notes',
+      name: 'Unknown Widget',
+      description: 'Fallback widget metadata',
+      icon: '',
+      defaultSize: 'medium',
+      minWidth: 300,
+      minHeight: 200,
+      maxWidth: 800,
+      maxHeight: 800,
+      category: 'utility',
+      color: '#94a3b8',
+      gradient: 'from-slate-400 to-slate-600'
+    }
+  }
+
+  return meta
 }
 
 export function getAllWidgets(): WidgetMetadata[] {

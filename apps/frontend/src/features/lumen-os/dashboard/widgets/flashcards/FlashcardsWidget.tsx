@@ -10,7 +10,7 @@ const SAMPLE_FLASHCARDS = [
     category: 'Geography'
   },
   {
-    id: '2',
+    id: '2', 
     question: 'What is 2 + 2?',
     answer: '4',
     category: 'Math'

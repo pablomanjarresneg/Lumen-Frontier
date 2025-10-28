@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
+import YouTube from 'react-youtube'
+import type { YouTubePlayer } from 'react-youtube'
 import type { WidgetProps } from '../../types'
+import { extractYouTubeVideoId, extractYouTubePlaylistId } from './youtubeUtils'
 
 interface Track {
   id: string
   title: string
-  artist: string
-  url: string
-  duration?: number
+  videoId: string  // YouTube video ID
+  playlistId?: string  // Optional playlist ID
+  url: string  // Original URL for reference
 }
 
 export default function MusicWidget({ config, onUpdate }: WidgetProps) {
@@ -16,16 +19,15 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [volume, setVolume] = useState<number>(config.data?.volume ?? 70)
-  const [isShuffled, setIsShuffled] = useState(false)
   const [repeatMode, setRepeatMode] = useState<'off' | 'all' | 'one'>('off')
   const [showAddTrack, setShowAddTrack] = useState(false)
   const [newTrackTitle, setNewTrackTitle] = useState('')
-  const [newTrackArtist, setNewTrackArtist] = useState('')
   const [newTrackUrl, setNewTrackUrl] = useState('')
   const [error, setError] = useState<string>('')
 
-  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const playerRef = useRef<YouTubePlayer | null>(null)
   const onUpdateRef = useRef(onUpdate)
+  const progressInterval = useRef<number | null>(null)
 
   useEffect(() => {
     onUpdateRef.current = onUpdate
@@ -39,46 +41,62 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
     }
   }, [playlist, currentTrackIndex, volume, config.data])
 
-  // Initialize audio element for current track
+  // Update progress while playing
   useEffect(() => {
-    if (playlist.length > 0 && playlist[currentTrackIndex]) {
-      const track = playlist[currentTrackIndex]
-      const audio = new Audio(track.url)
-      audio.volume = volume / 100
-      audioRef.current = audio
-
-      audio.addEventListener('loadedmetadata', () => {
-        setDuration(audio.duration)
-      })
-
-      audio.addEventListener('timeupdate', () => {
-        setCurrentTime(audio.currentTime)
-      })
-
-      audio.addEventListener('ended', () => {
-        handleTrackEnd()
-      })
-
-      audio.addEventListener('error', () => {
-        setError('Unable to load track. Check the URL.')
-        setIsPlaying(false)
-      })
-
-      return () => {
-        audio.pause()
-        audio.src = ''
-        audioRef.current = null
+    if (isPlaying) {
+      progressInterval.current = window.setInterval(async () => {
+        if (playerRef.current) {
+          try {
+            const time = await playerRef.current.getCurrentTime()
+            const dur = await playerRef.current.getDuration()
+            setCurrentTime(time)
+            setDuration(dur)
+          } catch (err) {
+            // Player not ready yet
+          }
+        }
+      }, 500)
+    } else {
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current)
       }
     }
-  }, [currentTrackIndex, playlist, volume])
+
+    return () => {
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current)
+      }
+    }
+  }, [isPlaying])
+
+  const onPlayerReady = (event: { target: YouTubePlayer }) => {
+    playerRef.current = event.target
+    playerRef.current.setVolume(volume)
+  }
+
+  const onPlayerStateChange = (event: { target: YouTubePlayer; data: number }) => {
+    // YouTube Player States: -1 (unstarted), 0 (ended), 1 (playing), 2 (paused), 3 (buffering), 5 (cued)
+    const playerState = event.data
+
+    if (playerState === 1) {
+      // Playing
+      setIsPlaying(true)
+      setError('')
+    } else if (playerState === 2) {
+      // Paused
+      setIsPlaying(false)
+    } else if (playerState === 0) {
+      // Ended
+      setIsPlaying(false)
+      handleTrackEnd()
+    }
+  }
 
   const handleTrackEnd = () => {
     if (repeatMode === 'one') {
       // Replay current track
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0
-        audioRef.current.play()
-      }
+      playerRef.current?.seekTo(0, true)
+      playerRef.current?.playVideo()
     } else if (repeatMode === 'all' || currentTrackIndex < playlist.length - 1) {
       // Play next track
       playNext()
@@ -88,21 +106,13 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
     }
   }
 
-  const togglePlay = async () => {
-    if (!audioRef.current || playlist.length === 0) return
+  const togglePlay = () => {
+    if (!playerRef.current || playlist.length === 0) return
 
     if (isPlaying) {
-      audioRef.current.pause()
-      setIsPlaying(false)
+      playerRef.current.pauseVideo()
     } else {
-      try {
-        await audioRef.current.play()
-        setIsPlaying(true)
-        setError('')
-      } catch (err) {
-        setError('Unable to play audio. File may be missing.')
-        setIsPlaying(false)
-      }
+      playerRef.current.playVideo()
     }
   }
 
@@ -110,52 +120,57 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
     if (playlist.length === 0) return
     const nextIndex = (currentTrackIndex + 1) % playlist.length
     setCurrentTrackIndex(nextIndex)
-    setIsPlaying(true)
   }
 
   const playPrevious = () => {
     if (playlist.length === 0) return
     // If more than 3 seconds into song, restart it. Otherwise go to previous
     if (currentTime > 3) {
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0
-      }
+      playerRef.current?.seekTo(0, true)
     } else {
       const prevIndex = currentTrackIndex === 0 ? playlist.length - 1 : currentTrackIndex - 1
       setCurrentTrackIndex(prevIndex)
-      setIsPlaying(true)
     }
   }
 
   const handleSeek = (newTime: number) => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = newTime
+    if (playerRef.current) {
+      playerRef.current.seekTo(newTime, true)
       setCurrentTime(newTime)
     }
   }
 
   const handleVolumeChange = (newVolume: number) => {
     setVolume(newVolume)
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume / 100
+    if (playerRef.current) {
+      playerRef.current.setVolume(newVolume)
     }
   }
 
   const addTrack = () => {
-    if (!newTrackTitle.trim() || !newTrackUrl.trim()) return
+    if (!newTrackUrl.trim()) return
+
+    const videoId = extractYouTubeVideoId(newTrackUrl)
+    const playlistId = extractYouTubePlaylistId(newTrackUrl)
+
+    if (!videoId && !playlistId) {
+      setError('Invalid YouTube URL. Please paste a valid YouTube video or playlist URL.')
+      return
+    }
 
     const newTrack: Track = {
       id: `track_${Date.now()}`,
-      title: newTrackTitle.trim(),
-      artist: newTrackArtist.trim() || 'Unknown Artist',
+      title: newTrackTitle.trim() || (videoId ? `YouTube Video` : `YouTube Playlist`),
+      videoId: videoId || '',
+      playlistId: playlistId || undefined,
       url: newTrackUrl.trim()
     }
 
     setPlaylist([...playlist, newTrack])
     setNewTrackTitle('')
-    setNewTrackArtist('')
     setNewTrackUrl('')
     setShowAddTrack(false)
+    setError('')
   }
 
   const removeTrack = (id: string) => {
@@ -189,19 +204,45 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
 
   const currentTrack = playlist[currentTrackIndex]
 
+  // YouTube player options
+  const opts = {
+    height: '0',
+    width: '0',
+    playerVars: {
+      autoplay: 0,
+      controls: 0,
+      disablekb: 1,
+      fs: 0,
+      modestbranding: 1,
+      playsinline: 1,
+    },
+  }
+
   return (
     <div className="flex flex-col h-full">
+      {/* Hidden YouTube Player */}
+      {currentTrack && currentTrack.videoId && (
+        <div className="hidden">
+          <YouTube
+            videoId={currentTrack.videoId}
+            opts={opts}
+            onReady={onPlayerReady}
+            onStateChange={onPlayerStateChange}
+          />
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-brass-200">Music Player</h3>
-          <p className="text-xs text-brass-400/60">{playlist.length} track{playlist.length !== 1 ? 's' : ''}</p>
+          <h3 className="text-lg font-semibold text-brass-200">YouTube Player</h3>
+          <p className="text-xs text-brass-400/60">{playlist.length} video{playlist.length !== 1 ? 's' : ''}</p>
         </div>
         <button
           onClick={() => setShowAddTrack(!showAddTrack)}
           className="p-2 rounded-lg bg-gradient-to-br from-brass-600 to-cognac-600 text-white hover:shadow-lg hover:shadow-brass-600/40 transition-all"
-          title="Add track"
-          aria-label="Add new track to playlist"
+          title="Add YouTube video"
+          aria-label="Add new YouTube video to playlist"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -214,21 +255,14 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
         <div className="mb-4 p-3 bg-gradient-to-br from-cognac-950/40 to-burgundy-950/30 border border-brass-800/30 rounded-lg space-y-2">
           <input
             type="text"
-            placeholder="Track title"
+            placeholder="Track title (optional)"
             value={newTrackTitle}
             onChange={(e) => setNewTrackTitle(e.target.value)}
             className="w-full px-3 py-2 bg-cognac-950/50 border border-brass-800/30 rounded-lg text-sm text-ivory-100 placeholder:text-brass-300/30 focus:outline-none focus:ring-2 focus:ring-brass-600/50"
           />
           <input
-            type="text"
-            placeholder="Artist (optional)"
-            value={newTrackArtist}
-            onChange={(e) => setNewTrackArtist(e.target.value)}
-            className="w-full px-3 py-2 bg-cognac-950/50 border border-brass-800/30 rounded-lg text-sm text-ivory-100 placeholder:text-brass-300/30 focus:outline-none focus:ring-2 focus:ring-brass-600/50"
-          />
-          <input
             type="url"
-            placeholder="Audio URL (mp3, wav, etc.)"
+            placeholder="YouTube URL (e.g., https://youtube.com/watch?v=...)"
             value={newTrackUrl}
             onChange={(e) => setNewTrackUrl(e.target.value)}
             className="w-full px-3 py-2 bg-cognac-950/50 border border-brass-800/30 rounded-lg text-sm text-ivory-100 placeholder:text-brass-300/30 focus:outline-none focus:ring-2 focus:ring-brass-600/50"
@@ -236,13 +270,16 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
           <div className="flex gap-2">
             <button
               onClick={addTrack}
-              disabled={!newTrackTitle.trim() || !newTrackUrl.trim()}
+              disabled={!newTrackUrl.trim()}
               className="flex-1 py-2 bg-gradient-to-r from-brass-600 to-cognac-600 text-white rounded-lg text-sm font-medium hover:shadow-lg hover:shadow-brass-600/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Add Track
+              Add Video
             </button>
             <button
-              onClick={() => setShowAddTrack(false)}
+              onClick={() => {
+                setShowAddTrack(false)
+                setError('')
+              }}
               className="px-4 py-2 bg-cognac-950/40 text-brass-300 rounded-lg text-sm hover:bg-cognac-900/50 transition-all"
             >
               Cancel
@@ -251,19 +288,26 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
         </div>
       )}
 
+      {/* Error Message */}
+      {error && (
+        <div className="mb-3 p-2 bg-burgundy-950/30 border border-burgundy-700/40 rounded-lg">
+          <p className="text-xs text-burgundy-300">{error}</p>
+        </div>
+      )}
+
       {/* Current Track Display */}
       {currentTrack ? (
         <>
           <div className="mb-4 p-4 bg-gradient-to-br from-cognac-950/40 to-burgundy-950/30 border border-brass-800/30 rounded-lg">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-brass-600 to-cognac-600 rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-700 rounded-lg flex items-center justify-center">
                 <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                 </svg>
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-brass-200 truncate">{currentTrack.title}</p>
-                <p className="text-xs text-brass-400/60 truncate">{currentTrack.artist}</p>
+                <p className="text-xs text-brass-400/60 truncate">YouTube Video</p>
               </div>
             </div>
 
@@ -287,7 +331,7 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
             </div>
 
             {/* Playback Controls */}
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center justify-center gap-2 mb-3">
               <button
                 onClick={toggleRepeat}
                 className={`p-2 rounded-lg transition-all ${
@@ -300,7 +344,7 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
-                {repeatMode === 'one' && <span className="text-xs">1</span>}
+                {repeatMode === 'one' && <span className="text-xs ml-1">1</span>}
               </button>
               <button
                 onClick={playPrevious}
@@ -315,7 +359,8 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
               </button>
               <button
                 onClick={togglePlay}
-                className="p-4 rounded-full bg-gradient-to-br from-brass-600 to-cognac-600 text-white shadow-lg shadow-brass-600/40 hover:scale-105 transition-all"
+                disabled={playlist.length === 0}
+                className="p-4 rounded-full bg-gradient-to-br from-brass-600 to-cognac-600 text-white shadow-lg shadow-brass-600/40 hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 title={isPlaying ? "Pause" : "Play"}
                 aria-label={isPlaying ? "Pause track" : "Play track"}
               >
@@ -340,23 +385,10 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
                   <path d="M16 18h2V6h-2v12zM6 18l8.5-6L6 6v12z" />
                 </svg>
               </button>
-              <button
-                onClick={() => setIsShuffled(!isShuffled)}
-                className={`p-2 rounded-lg transition-all ${
-                  isShuffled
-                    ? 'bg-brass-600/30 text-brass-300'
-                    : 'text-brass-400/50 hover:text-brass-300'
-                }`}
-                title="Shuffle"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                </svg>
-              </button>
             </div>
 
             {/* Volume Control */}
-            <div className="mt-3 flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <svg className="w-4 h-4 text-brass-400/60 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M5.889 16H2a1 1 0 01-1-1V9a1 1 0 011-1h3.889l5.294-4.332a.5.5 0 01.817.387v15.89a.5.5 0 01-.817.387L5.89 16z" />
               </svg>
@@ -377,23 +409,16 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
         </>
       ) : null}
 
-      {/* Error Message */}
-      {error && (
-        <div className="mb-3 p-2 bg-burgundy-950/30 border border-burgundy-700/40 rounded-lg">
-          <p className="text-xs text-burgundy-300">{error}</p>
-        </div>
-      )}
-
       {/* Playlist */}
       <div className="flex-1 overflow-y-auto">
-        <h4 className="text-sm font-semibold text-brass-300 mb-2 px-1">Playlist</h4>
+        <h4 className="text-sm font-semibold text-brass-300 mb-2 px-1">Queue</h4>
         {playlist.length === 0 ? (
           <div className="text-center py-8 text-brass-300/40">
-            <svg className="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+            <svg className="w-16 h-16 mx-auto mb-3 opacity-50" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
             </svg>
-            <p className="text-sm">No tracks yet</p>
-            <p className="text-xs">Add tracks to build your playlist</p>
+            <p className="text-sm font-medium mb-1">No videos yet</p>
+            <p className="text-xs">Add YouTube videos to start playing</p>
           </div>
         ) : (
           <div className="space-y-1">
@@ -402,7 +427,9 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
                 key={track.id}
                 onClick={() => {
                   setCurrentTrackIndex(index)
-                  setIsPlaying(true)
+                  if (playerRef.current) {
+                    playerRef.current.playVideo()
+                  }
                 }}
                 className={`group p-2 rounded-lg cursor-pointer transition-all ${
                   index === currentTrackIndex
@@ -411,22 +438,28 @@ export default function MusicWidget({ config, onUpdate }: WidgetProps) {
                 }`}
               >
                 <div className="flex items-center gap-2">
+                  <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+                    {index === currentTrackIndex && isPlaying ? (
+                      <svg className="w-4 h-4 text-red-500 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                      </svg>
+                    ) : (
+                      <span className="text-xs text-brass-400/60">{index + 1}</span>
+                    )}
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-ivory-100 truncate">{track.title}</p>
-                    <p className="text-xs text-brass-400/60 truncate">{track.artist}</p>
+                    <p className="text-xs text-brass-400/60 truncate">
+                      {track.playlistId ? 'Playlist' : 'Video'} • {track.videoId.substring(0, 8)}
+                    </p>
                   </div>
-                  {index === currentTrackIndex && isPlaying && (
-                    <svg className="w-3 h-3 text-brass-400 animate-pulse flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  )}
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
                       removeTrack(track.id)
                     }}
                     className="opacity-0 group-hover:opacity-100 p-1 text-burgundy-400 hover:bg-burgundy-500/20 rounded transition-all flex-shrink-0"
-                    title="Remove track"
+                    title="Remove video"
                   >
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
